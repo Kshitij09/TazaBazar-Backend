@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Nachni / Ragi",
+    "quantity": "1 Kg",
+    "price": 80.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/369701583223942.jpg"
+  },
+  {
+    "name": "Toor Dal",
+    "quantity": "500 gm",
+    "price": 85.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/568621583224154.jpg"
+  },
+  {
+    "name": "Chana Dal",
+    "quantity": "500 gm",
+    "price": 75.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/720561583222400.jpg"
+  },
+  {
+    "name": "Moong Dal",
+    "quantity": "500 gm",
+    "price": 90.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/210391584303181.jpeg"
+  },
+  {
+    "name": "Kabuli Chana / Chole",
+    "quantity": "500 gm",
+    "price": 75.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/360721583222649.jpg"
+  },
+  {
+    "name": "Til / Sesame Seeds",
+    "quantity": "100 gm",
+    "price": 30.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/26291583388709.jpg"
+  },
+  {
+    "name": "Moong Chilka(Split)",
+    "quantity": "500 gm",
+    "price": 84.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/1171584303133.jpeg"
+  },
+  {
+    "name": "Moong",
+    "quantity": "500 gm",
+    "price": 90.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/647261607263417.jpeg"
+  },
+  {
+    "name": "Mohari/ Mustard",
+    "quantity": "100 gm",
+    "price": 25.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/568671607264485.jpeg"
+  }
+]

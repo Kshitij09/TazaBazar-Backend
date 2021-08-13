@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Desi Banana-Kachi",
+    "quantity": "1 dozen",
+    "price": 60.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/52051583232330.jpeg"
+  },
+  {
+    "name": "Chikoo / Sapota",
+    "quantity": "500 gm",
+    "price": 40.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/103571583389016.jpg"
+  },
+  {
+    "name": "Organic  Kairi",
+    "quantity": "1 Kg",
+    "price": 80.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/804091588136291.jpg"
+  },
+  {
+    "name": "Papaya",
+    "quantity": "1 Kg",
+    "price": 35.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/802131590404206.jpg"
+  },
+  {
+    "name": "Sitafal",
+    "quantity": "500 gm",
+    "price": 50.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/325641594618284.jpeg"
+  },
+  {
+    "name": "coconut",
+    "quantity": "1 Medium",
+    "price": 30.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/88551597940513.jpg"
+  }
+]

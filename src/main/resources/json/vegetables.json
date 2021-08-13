@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Potato",
+    "quantity": "1 Kg",
+    "price": 30.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/996281576840090.jpg"
+  },
+  {
+    "name": "Tomato Red",
+    "quantity": "500 gm",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/364601583224085.jpeg"
+  },
+  {
+    "name": "Cucumber / Kakdi",
+    "quantity": "300 gm",
+    "price": 20.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/411191583221455.jpeg"
+  },
+  {
+    "name": "Green Tomato",
+    "quantity": "300 gm",
+    "price": 10.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/669791583222266.jpg"
+  },
+  {
+    "name": "Okra / Bhendi",
+    "quantity": "250 gm",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/259111583220868.jpeg"
+  },
+  {
+    "name": "Raddish / Mula",
+    "quantity": "1 Nos",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/835961583223910.jpeg"
+  },
+  {
+    "name": "French Beans",
+    "quantity": "250 gm",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/514941583232004.jpeg"
+  },
+  {
+    "name": "Ridge Gourd / Dodka",
+    "quantity": "300 gm",
+    "price": 20.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/884111583221735.jpeg"
+  },
+  {
+    "name": "Beetroot",
+    "quantity": "1 Kg",
+    "price": 60.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/35391578384908.jpg"
+  },
+  {
+    "name": "Chavli / Cowpea",
+    "quantity": "250 gm",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/282631583221168.jpg"
+  },
+  {
+    "name": "Usavarchi Sheng / Delhi Ghevda",
+    "quantity": "250 gm",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/22901583221568.jpg"
+  },
+  {
+    "name": "Karela",
+    "quantity": "300 gm",
+    "price": 20.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/766711578384875.jpg"
+  },
+  {
+    "name": "Cauliflower",
+    "quantity": "300 gm",
+    "price": 30.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/322981578384793.jpg"
+  },
+  {
+    "name": "Pandhri Vangi / White Brinjal",
+    "quantity": "250 gm",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/988651583224353.jpeg"
+  },
+  {
+    "name": "Ratala / Sweet Potato",
+    "quantity": "500 gm",
+    "price": 30.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/89911578384662.jpg"
+  },
+  {
+    "name": "Varna",
+    "quantity": "250 gm",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/270691583224402.jpg"
+  },
+  {
+    "name": "Sweetcorn",
+    "quantity": "1 Nos",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/749281578384624.jpg"
+  },
+  {
+    "name": "Kobi / Cabbage",
+    "quantity": "1 Nos",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/204341583224241.jpeg"
+  },
+  {
+    "name": "Ginger / Alla",
+    "quantity": "100 gm",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/52571583221952.jpeg"
+  },
+  {
+    "name": "Kolhapuri Kakdi",
+    "quantity": "300 gm",
+    "price": 20.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/281481584303066.jpeg"
+  }
+]

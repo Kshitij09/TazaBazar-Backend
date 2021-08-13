@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Spinach / Palak",
+    "quantity": "1 Nos",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/999851583231618.jpg"
+  },
+  {
+    "name": "Kothambir /Coriander",
+    "quantity": "1 Nos",
+    "price": 20.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/585661583388558.jpg"
+  },
+  {
+    "name": "Methi",
+    "quantity": "1 Nos",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/397301583388620.jpg"
+  },
+  {
+    "name": "Dill / Shepu",
+    "quantity": "1 Nos",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/839561583388508.jpg"
+  },
+  {
+    "name": "Tandli",
+    "quantity": "1 Nos",
+    "price": 20.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/494681583224035.jpg"
+  },
+  {
+    "name": "Chakvat",
+    "quantity": "1 Nos",
+    "price": 15.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/159051584017566.jpg"
+  },
+  {
+    "name": "Kanda Paat / Spring Onion",
+    "quantity": "1 Nos",
+    "price": 20.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/833751578384305.jpg"
+  },
+  {
+    "name": "Gavti Cha / Lemon Grass",
+    "quantity": "1 Nos",
+    "price": 10.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/586831583223211.jpeg"
+  },
+  {
+    "name": "Kadi Patta / Curry Leaves",
+    "quantity": "1 Nos",
+    "price": 5.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/178211583222702.jpg"
+  },
+  {
+    "name": "Mix Bhaaji (Leafy Veggies)",
+    "quantity": "150 gm",
+    "price": 20.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/433371583223295.jpg"
+  },
+  {
+    "name": "Alu Leaves",
+    "quantity": "1 Nos",
+    "price": 30.0,
+    "image_uri": "https://www.fooxyz.com/public/uploads/products/thumbnail/289041594208053.jpeg"
+  }
+]
