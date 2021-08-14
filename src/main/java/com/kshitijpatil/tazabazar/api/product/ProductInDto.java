@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public @Data
-class ProductDto {
+class ProductInDto {
     private String name;
     @JsonProperty("quantity")
     private String quantityLabel;

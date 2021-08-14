@@ -1,7 +1,7 @@
 package com.kshitijpatil.tazabazar.api;
 
 import com.kshitijpatil.tazabazar.api.product.JsonDataSource;
-import com.kshitijpatil.tazabazar.api.product.ProductDto;
+import com.kshitijpatil.tazabazar.api.product.ProductInDto;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -13,31 +13,31 @@ public class TestJsonDataSource {
 
     @Test
     public void testReadFruitsJson() {
-        List<ProductDto> parsedProducts = jsonDataSource.getFruits();
+        List<ProductInDto> parsedProducts = jsonDataSource.getFruits();
         assertThat(parsedProducts).isNotEmpty();
     }
 
     @Test
     public void testReadVegetablesJson() {
-        List<ProductDto> parsedProducts = jsonDataSource.getVegetables();
+        List<ProductInDto> parsedProducts = jsonDataSource.getVegetables();
         assertThat(parsedProducts).isNotEmpty();
     }
 
     @Test
     public void testReadLeafyVegetablesJson() {
-        List<ProductDto> parsedProducts = jsonDataSource.getLeafyVegetables();
+        List<ProductInDto> parsedProducts = jsonDataSource.getLeafyVegetables();
         assertThat(parsedProducts).isNotEmpty();
     }
 
     @Test
     public void testReadRiceWheatAttaJson() {
-        List<ProductDto> parsedProducts = jsonDataSource.getRiceWheatAtta();
+        List<ProductInDto> parsedProducts = jsonDataSource.getRiceWheatAtta();
         assertThat(parsedProducts).isNotEmpty();
     }
 
     @Test
     public void testReadDalsAndPulsesJson() {
-        List<ProductDto> parsedProducts = jsonDataSource.getDalsAndPulses();
+        List<ProductInDto> parsedProducts = jsonDataSource.getDalsAndPulses();
         assertThat(parsedProducts).isNotEmpty();
     }
 }

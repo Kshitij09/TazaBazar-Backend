@@ -28,10 +28,10 @@ public class JsonDataSource {
     private @Setter
     String vegetablesFilepath = "classpath:json/vegetables.json";
 
-    private List<ProductDto> readProductsFrom(String filepath) {
+    private List<ProductInDto> readProductsFrom(String filepath) {
         try {
             File file = ResourceUtils.getFile(filepath);
-            ProductDto[] fruits = mapper.readValue(file, ProductDto[].class);
+            ProductInDto[] fruits = mapper.readValue(file, ProductInDto[].class);
             logger.debug("Read " + fruits.length + " objects from " + filepath);
             return Arrays.asList(fruits);
         } catch (IOException e) {
@@ -40,23 +40,23 @@ public class JsonDataSource {
         }
     }
 
-    public List<ProductDto> getFruits() {
+    public List<ProductInDto> getFruits() {
         return readProductsFrom(fruitsFilepath);
     }
 
-    public List<ProductDto> getDalsAndPulses() {
+    public List<ProductInDto> getDalsAndPulses() {
         return readProductsFrom(dalsAndPulsesFilepath);
     }
 
-    public List<ProductDto> getLeafyVegetables() {
+    public List<ProductInDto> getLeafyVegetables() {
         return readProductsFrom(leafyVegetablesFilepath);
     }
 
-    public List<ProductDto> getVegetables() {
+    public List<ProductInDto> getVegetables() {
         return readProductsFrom(vegetablesFilepath);
     }
 
-    public List<ProductDto> getRiceWheatAtta() {
+    public List<ProductInDto> getRiceWheatAtta() {
         return readProductsFrom(riceWheatAttaFilepath);
     }
 }

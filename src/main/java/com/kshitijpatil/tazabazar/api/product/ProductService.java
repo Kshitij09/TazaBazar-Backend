@@ -3,7 +3,7 @@ package com.kshitijpatil.tazabazar.api.product;
 import java.util.List;
 
 public interface ProductService {
-    List<Product> getAllProducts();
+    List<ProductOutDto> getAllProducts();
 
     List<Product> getProductsByCategory(ProductCategory productCategory);
 
