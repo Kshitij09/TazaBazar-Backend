@@ -1,6 +1,8 @@
 package com.kshitijpatil.tazabazar.api.inventory;
 
+import com.kshitijpatil.tazabazar.api.ApiError;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -36,8 +38,10 @@ public class InMemoryInventoryService implements InventoryService {
     }
 
     @AllArgsConstructor
-    public static class InventoryNotFoundException extends RuntimeException {
+    public static class InventoryNotFoundException extends RuntimeException implements ApiError {
         private int id;
+        @Getter
+        private final String error = "inv-001";
 
         @Override
         public String getMessage() {

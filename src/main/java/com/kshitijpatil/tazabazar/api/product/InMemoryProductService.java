@@ -1,8 +1,10 @@
 package com.kshitijpatil.tazabazar.api.product;
 
+import com.kshitijpatil.tazabazar.api.ApiError;
 import com.kshitijpatil.tazabazar.api.inventory.InventoryService;
 import com.kshitijpatil.tazabazar.api.utils.MockDataFactory;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,8 +155,10 @@ public class InMemoryProductService implements ProductService {
     }
 
     @AllArgsConstructor
-    public static class ProductNotFoundException extends RuntimeException {
+    public static class ProductNotFoundException extends RuntimeException implements ApiError {
         private int id;
+        @Getter
+        private final String error = "pr-001";
 
         @Override
         public String getMessage() {
