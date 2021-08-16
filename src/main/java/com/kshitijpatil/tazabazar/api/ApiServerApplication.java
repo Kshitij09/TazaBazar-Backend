@@ -17,7 +17,7 @@ public class ApiServerApplication {
 
 	@Bean
 	@Autowired
-	CommandLineRunner initInMemoryDatabase(@Qualifier("in_memory") ProductService productService) {
+	CommandLineRunner initInMemoryDatabase(@Qualifier("in_memory_product") ProductService productService) {
 		return args -> productService.init();
 	}
 

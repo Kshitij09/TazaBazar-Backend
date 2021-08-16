@@ -1,11 +1,12 @@
 package com.kshitijpatil.tazabazar.api.product;
 
-import com.kshitijpatil.tazabazar.api.inventory.Inventory;
+import com.kshitijpatil.tazabazar.api.inventory.InventoryService;
 import com.kshitijpatil.tazabazar.api.utils.MockDataFactory;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +18,19 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-@Service("in_memory")
+@Service("in_memory_product")
 public class InMemoryProductService implements ProductService {
-    private final JsonDataSource dataSource;
+    @Autowired
+    private JsonDataSource dataSource;
     private final Logger logger = LoggerFactory.getLogger(InMemoryProductService.class);
     volatile Map<Integer, Product> productsMap = new ConcurrentSkipListMap<>();
     private final Map<ProductCategory, String> categoryToSkuPrefix = new HashMap<>();
-    volatile Map<Integer, Inventory> productInventoryMap = new ConcurrentSkipListMap<>();
     private final AtomicInteger globalProductId = new AtomicInteger(0);
     private final ProductCategory[] categoryValues = ProductCategory.values();
+
+    @Autowired
+    @Qualifier("in_memory_inventory")
+    private InventoryService inventoryService;
 
     @Value("${filestore.base-url}")
     private String fileStoreBaseUrl;
@@ -36,11 +41,6 @@ public class InMemoryProductService implements ProductService {
         categoryToSkuPrefix.put(ProductCategory.LEAFY_VEGETABLES, "LVT");
         categoryToSkuPrefix.put(ProductCategory.DALS_AND_PULSES, "DP");
         categoryToSkuPrefix.put(ProductCategory.RICE_WHEAT_ATTA, "RWA");
-    }
-
-    @Autowired
-    public InMemoryProductService(JsonDataSource dataSource) {
-        this.dataSource = dataSource;
     }
 
     private int getBaseRangeFor(ProductCategory category) {
@@ -66,10 +66,11 @@ public class InMemoryProductService implements ProductService {
             product.setQuantityLabel(productInDto.getQuantityLabel());
             product.setPrice(productInDto.getPrice());
             product.setImageUri(getImageUriFor(productInDto.getImageUri()));
+            // we use productId as the identifier for inventory as well
             var inventory = MockDataFactory.createInventory(product.getProductId());
             product.setProductInventory(inventory);
             productsMap.put(product.getProductId(), product);
-            productInventoryMap.put(product.getProductId(), inventory);
+            inventoryService.addInventory(inventory);
         }
     }
 
@@ -119,16 +120,6 @@ public class InMemoryProductService implements ProductService {
     }
 
     @Override
-    public Inventory getInventoryById(int productId) {
-        var inventory = productInventoryMap.get(productId);
-        if (inventory == null) {
-            throw new InventoryNotFoundException(productId);
-        } else {
-            return inventory;
-        }
-    }
-
-    @Override
     public void updateProduct(int productId, ProductOutDto productDto) {
         if (productsMap.containsKey(productId)) {
             var product = ProductMapper.fromProductDto(productDto);
@@ -145,7 +136,7 @@ public class InMemoryProductService implements ProductService {
             // item not found
             throw new ProductNotFoundException(productId);
         } else {
-            productInventoryMap.remove(productId);
+            inventoryService.deleteInventory(productId);
         }
     }
 
@@ -162,7 +153,7 @@ public class InMemoryProductService implements ProductService {
     }
 
     @AllArgsConstructor
-    static class ProductNotFoundException extends RuntimeException {
+    public static class ProductNotFoundException extends RuntimeException {
         private int id;
 
         @Override
@@ -171,13 +162,4 @@ public class InMemoryProductService implements ProductService {
         }
     }
 
-    @AllArgsConstructor
-    static class InventoryNotFoundException extends RuntimeException {
-        private int id;
-
-        @Override
-        public String getMessage() {
-            return "Inventory with id='" + id + "' not found";
-        }
-    }
 }

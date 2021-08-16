@@ -1,7 +1,6 @@
-package com.kshitijpatil.tazabazar.api.product;
+package com.kshitijpatil.tazabazar.api;
 
-import com.kshitijpatil.tazabazar.api.ApiErrorResponse;
-import com.kshitijpatil.tazabazar.api.product.InMemoryProductService.InventoryNotFoundException;
+import com.kshitijpatil.tazabazar.api.inventory.InMemoryInventoryService.InventoryNotFoundException;
 import com.kshitijpatil.tazabazar.api.product.InMemoryProductService.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.OffsetDateTime;
 
 @RestControllerAdvice
-public class ProductExceptionHandler {
+public class ApiExceptionHandler {
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleApiException(ProductNotFoundException ex) {
         var response = new ApiErrorResponse(OffsetDateTime.now(), "pr-001", ex.getMessage());

@@ -1,6 +1,7 @@
 package com.kshitijpatil.tazabazar.api.product;
 
 import com.kshitijpatil.tazabazar.api.inventory.Inventory;
+import com.kshitijpatil.tazabazar.api.inventory.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +12,12 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
     @Autowired
-    @Qualifier("in_memory")
+    @Qualifier("in_memory_product")
     ProductService productService;
+
+    @Autowired
+    @Qualifier("in_memory_inventory")
+    InventoryService inventoryService;
 
     @GetMapping
     public List<ProductOutDto> getProducts(@RequestParam(value = "category_id", required = false) Integer categoryId) {
@@ -45,6 +50,6 @@ public class ProductController {
 
     @GetMapping("/{product_id}/inventory")
     public Inventory getInventoryById(@PathVariable("product_id") int productId) {
-        return productService.getInventoryById(productId);
+        return inventoryService.getInventoryById(productId);
     }
 }

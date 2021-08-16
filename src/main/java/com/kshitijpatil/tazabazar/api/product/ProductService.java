@@ -1,7 +1,5 @@
 package com.kshitijpatil.tazabazar.api.product;
 
-import com.kshitijpatil.tazabazar.api.inventory.Inventory;
-
 import java.util.List;
 
 public interface ProductService {
@@ -10,8 +8,6 @@ public interface ProductService {
     List<ProductOutDto> getProductsByCategoryId(int categoryId);
 
     ProductOutDto getProductById(int productId);
-
-    Inventory getInventoryById(int productId);
 
     void updateProduct(int productId, ProductOutDto productDto);
 
