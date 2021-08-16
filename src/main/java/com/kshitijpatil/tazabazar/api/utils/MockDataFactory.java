@@ -37,7 +37,7 @@ public class MockDataFactory {
 
     public static Inventory createInventory(int productId) {
         var inventory = new Inventory();
-        inventory.setId(productId);
+        inventory.setProductId(productId);
         inventory.setQuantity(generator.nextInt(50));
         inventory.setCreatedAt(getRandomCreatedDateTime());
         inventory.setModifiedAt(OffsetDateTime.now());

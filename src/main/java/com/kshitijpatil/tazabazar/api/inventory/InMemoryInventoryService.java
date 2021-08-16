@@ -14,27 +14,35 @@ public class InMemoryInventoryService implements InventoryService {
 
     @Override
     public void addInventory(Inventory inventory) {
-        inventoryMap.put(inventory.getId(), inventory);
+        inventoryMap.put(inventory.getProductId(), inventory);
     }
 
     @Override
-    public Inventory getInventoryById(int productId) {
+    public InventoryDto getInventoryById(int productId) {
         var inventory = inventoryMap.get(productId);
         if (inventory == null) {
             throw new InventoryNotFoundException(productId);
         } else {
-            return inventory;
+            return InventoryMapper.toInventoryDto(inventory);
         }
     }
 
     @Override
-    public void updateInventory(Inventory inventory) {
-
+    public void updateInventory(InventoryDto inventoryDto) {
+        var inventory = inventoryMap.get(inventoryDto.getId());
+        if (inventory == null) {
+            throw new InventoryNotFoundException(inventoryDto.getId());
+        } else {
+            // we're ignoring rest of the fields
+            inventory.setQuantity(inventoryDto.getQuantity());
+        }
     }
 
     @Override
     public void deleteInventory(int productId) {
-
+        var inventory = inventoryMap.remove(productId);
+        if (inventory == null)
+            throw new InventoryNotFoundException(productId);
     }
 
     @AllArgsConstructor

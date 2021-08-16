@@ -3,9 +3,9 @@ package com.kshitijpatil.tazabazar.api.inventory;
 public interface InventoryService {
     void addInventory(Inventory inventory);
 
-    Inventory getInventoryById(int productId);
+    InventoryDto getInventoryById(int productId);
 
-    void updateInventory(Inventory inventory);
+    void updateInventory(InventoryDto inventoryDto);
 
     void deleteInventory(int productId);
 }
