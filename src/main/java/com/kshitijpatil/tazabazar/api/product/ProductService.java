@@ -1,15 +1,23 @@
 package com.kshitijpatil.tazabazar.api.product;
 
+import com.kshitijpatil.tazabazar.api.inventory.Inventory;
+
 import java.util.List;
 
 public interface ProductService {
     List<ProductOutDto> getAllProducts();
 
-    List<Product> getProductsByCategory(ProductCategory productCategory);
+    List<ProductOutDto> getProductsByCategoryId(int categoryId);
 
-    List<Product> getProductById(int productId);
+    ProductOutDto getProductById(int productId);
 
-    void updateProduct(Product product);
+    Inventory getInventoryById(int productId);
+
+    void updateProduct(int productId, ProductOutDto productDto);
+
+    void deleteProduct(int productId);
+
+    List<CategoryDto> getAllCategories();
 
     void init();
 }

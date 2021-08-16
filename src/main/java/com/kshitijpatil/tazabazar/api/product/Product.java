@@ -2,18 +2,29 @@ package com.kshitijpatil.tazabazar.api.product;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kshitijpatil.tazabazar.api.inventory.Inventory;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.text.WordUtils;
 
 enum ProductCategory {
     VEGETABLES,
     LEAFY_VEGETABLES,
     FRUITS,
     RICE_WHEAT_ATTA,
-    DALS_AND_PULSES
+    DALS_AND_PULSES;
+
+    private final char[] nameDelimiters = {' ', '_'};
+
+    String getDisplayName() {
+        var name = name().replace("_", " ");
+        return WordUtils.capitalizeFully(name, nameDelimiters);
+    }
+
 }
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 class CategoryDto {
     private int id;
@@ -41,8 +52,7 @@ class ProductOutDto {
     private String sku;
     @JsonProperty("category_id")
     private int categoryId;
-    @JsonProperty("inventory_id")
-    private int inventoryId;
+    private Inventory inventory;
     private String name;
     @JsonProperty("quantity_label")
     private String quantityLabel;
