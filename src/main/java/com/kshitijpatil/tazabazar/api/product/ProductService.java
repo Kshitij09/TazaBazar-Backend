@@ -14,6 +14,4 @@ public interface ProductService {
     void deleteProduct(int productId);
 
     List<CategoryDto> getAllCategories();
-
-    void init();
 }

@@ -1,6 +1,5 @@
 package com.kshitijpatil.tazabazar.api;
 
-import com.kshitijpatil.tazabazar.api.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
@@ -17,8 +16,8 @@ public class ApiServerApplication {
 
 	@Bean
 	@Autowired
-	CommandLineRunner initInMemoryDatabase(@Qualifier("in_memory_product") ProductService productService) {
-		return args -> productService.init();
+	CommandLineRunner initInMemoryDatabase(@Qualifier("in_memory_product") AppInitializer productsInitializer) {
+		return args -> productsInitializer.init();
 	}
 
 }

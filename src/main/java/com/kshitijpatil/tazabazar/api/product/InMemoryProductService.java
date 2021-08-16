@@ -1,6 +1,7 @@
 package com.kshitijpatil.tazabazar.api.product;
 
 import com.kshitijpatil.tazabazar.api.ApiError;
+import com.kshitijpatil.tazabazar.api.AppInitializer;
 import com.kshitijpatil.tazabazar.api.inventory.InventoryService;
 import com.kshitijpatil.tazabazar.api.utils.MockDataFactory;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service("in_memory_product")
-public class InMemoryProductService implements ProductService {
+public class InMemoryProductService implements ProductService, AppInitializer {
     @Autowired
     private JsonDataSource dataSource;
     private final Logger logger = LoggerFactory.getLogger(InMemoryProductService.class);
