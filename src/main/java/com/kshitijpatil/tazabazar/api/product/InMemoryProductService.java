@@ -2,6 +2,7 @@ package com.kshitijpatil.tazabazar.api.product;
 
 import com.kshitijpatil.tazabazar.api.ApiError;
 import com.kshitijpatil.tazabazar.api.AppInitializer;
+import com.kshitijpatil.tazabazar.api.inventory.InventoryMapper;
 import com.kshitijpatil.tazabazar.api.inventory.InventoryService;
 import com.kshitijpatil.tazabazar.api.utils.MockDataFactory;
 import lombok.AllArgsConstructor;
@@ -124,8 +125,19 @@ public class InMemoryProductService implements ProductService, AppInitializer {
 
     @Override
     public void updateProduct(int productId, ProductOutDto productDto) {
-        if (productsMap.containsKey(productId)) {
-            var product = ProductMapper.fromProductDto(productDto);
+        var product = productsMap.get(productId);
+        if (product != null) {
+            var productUpdates = ProductMapper.fromProductDto(productDto);
+            // Ignoring productId and sku updates
+            // Inventory updates are also considered
+            // maintaining the consistency
+            product.setProductCategory(productUpdates.getProductCategory());
+            product.setPrice(productUpdates.getPrice());
+            product.setName(productUpdates.getName());
+            product.setQuantityLabel(productUpdates.getQuantityLabel());
+            product.setImageUri(productUpdates.getImageUri());
+            inventoryService.updateInventory(InventoryMapper.toInventoryDto(productUpdates.getProductInventory()));
+            product.setProductInventory(productUpdates.getProductInventory());
             productsMap.put(productId, product);
         } else {
             throw new ProductNotFoundException(productId);

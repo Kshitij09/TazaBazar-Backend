@@ -16,7 +16,7 @@ public class ProductMapper {
 
     public static Product fromProductDto(ProductOutDto productDto) {
         var product = new Product();
-        // we silently ignore the read only property 'productId'
+        product.setProductId(productDto.getProductId());
         product.setProductInventory(productDto.getInventory());
         var category = ProductCategory.values()[productDto.getCategoryId()];
         product.setProductCategory(category);
