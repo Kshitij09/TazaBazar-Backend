@@ -1,13 +1,12 @@
 package com.kshitijpatil.tazabazar.api.security;
 
-import com.kshitijpatil.tazabazar.api.security.service.UserService;
+import com.kshitijpatil.tazabazar.api.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,15 +18,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
     @Autowired
-    @Qualifier("in_memory_user_details")
-    UserService userService;
+    @Qualifier("in_memory_user_repository")
+    UserRepository userRepository;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -49,13 +47,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         // Get user identity and set it on Spring Security Context
-        UserDetails userDetails = null;
-        var username = jwtTokenUtil.getUsername(token);
-        try {
-            userDetails = userService.loadUserByUsername(username);
-        } catch (UsernameNotFoundException ex) {
-            logger.info(format("User: %s, not found", username), ex);
-        }
+        var userDetails = userRepository
+                .findByUsername(jwtTokenUtil.getUsername(token))
+                .orElse(null);
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null,

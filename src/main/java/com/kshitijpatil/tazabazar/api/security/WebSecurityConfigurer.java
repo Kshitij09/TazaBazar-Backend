@@ -1,5 +1,6 @@
 package com.kshitijpatil.tazabazar.api.security;
 
+import com.kshitijpatil.tazabazar.api.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +11,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -23,10 +24,10 @@ import javax.servlet.http.HttpServletResponse;
 import static java.lang.String.format;
 
 @EnableWebSecurity
-public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
-    @Qualifier("in_memory_user_details")
-    UserDetailsService userDetailsService;
+    @Qualifier("in_memory_user_repository")
+    UserRepository userRepository;
     @Value("${springdoc.api-docs.path}")
     private String restApiDocPath;
     @Value("${springdoc.swagger-ui.path}")
@@ -36,7 +37,10 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(username -> userDetailsService.loadUserByUsername(username));
+        auth.userDetailsService(username -> userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(format("User: %s, not found", username)))
+        );
     }
 
     @Override
@@ -72,6 +76,13 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
+    // Expose authentication manager bean
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     // Used by spring security if CORS is enabled.
     @Bean
     public CorsFilter corsFilter() {
@@ -85,15 +96,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
         return new CorsFilter(source);
     }
 
-    // Expose authentication manager bean
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 }

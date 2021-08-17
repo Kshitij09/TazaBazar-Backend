@@ -5,10 +5,9 @@ import com.kshitijpatil.tazabazar.api.security.dto.CreateUserRequest;
 import com.kshitijpatil.tazabazar.api.security.dto.UserView;
 import com.kshitijpatil.tazabazar.api.security.mappers.UserMapper;
 import com.kshitijpatil.tazabazar.api.security.model.User;
-import com.kshitijpatil.tazabazar.api.security.service.UserService;
+import com.kshitijpatil.tazabazar.api.security.service.IUserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +33,7 @@ public class AuthController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    @Qualifier("in_memory_user_details")
-    private UserService userService;
+    private IUserService userService;
 
     @PostMapping("login")
     public ResponseEntity<UserView> login(@RequestBody @Valid AuthRequest request) {
