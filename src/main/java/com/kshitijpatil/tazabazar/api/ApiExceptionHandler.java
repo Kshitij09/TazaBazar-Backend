@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ValidationException;
 import java.time.OffsetDateTime;
 
 @RestControllerAdvice
@@ -24,5 +25,11 @@ public class ApiExceptionHandler {
     @ExceptionHandler(InventoryNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleApiException(InventoryNotFoundException ex) {
         return getResponseEntityFor(ex, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiErrorResponse> handleApiException(ValidationException ex) {
+        var response = new ApiErrorResponse(OffsetDateTime.now(), "val-001", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
