@@ -3,7 +3,7 @@ package com.kshitijpatil.tazabazar.api.security;
 import com.kshitijpatil.tazabazar.api.security.model.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -15,7 +15,8 @@ public class JwtTokenUtil {
     private final String jwtSecret = "zdtlD3JK56m6wTTgsNFhqzjqP";
     private final String jwtIssuer = "com.kshitijpatil.tazabazar";
 
-    private final Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
+    @Autowired
+    private Logger logger;
 
     public String generateAccessToken(User user) {
         return Jwts.builder()

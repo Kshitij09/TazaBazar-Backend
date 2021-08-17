@@ -3,7 +3,7 @@ package com.kshitijpatil.tazabazar.api.product;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Setter;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -15,7 +15,8 @@ import java.util.List;
 
 @Component
 public class JsonDataSource {
-    private final Logger logger = LoggerFactory.getLogger(JsonDataSource.class);
+    @Autowired
+    private Logger logger;
     private final ObjectMapper mapper = new ObjectMapper();
     private @Setter
     String fruitsFilepath = "classpath:json/fruits.json";

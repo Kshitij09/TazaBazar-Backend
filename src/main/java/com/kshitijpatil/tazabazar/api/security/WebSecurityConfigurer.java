@@ -1,6 +1,7 @@
 package com.kshitijpatil.tazabazar.api.security;
 
 import com.kshitijpatil.tazabazar.api.security.repository.UserRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     private String swaggerPath;
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
+    @Autowired
+    private Logger logger;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -58,7 +61,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(
                         (request, response, ex) -> {
-                            //logger.error("Unauthorized request - {}", ex.getMessage());
+                            logger.error("Unauthorized request - {}", ex.getMessage());
                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
                         }
                 )

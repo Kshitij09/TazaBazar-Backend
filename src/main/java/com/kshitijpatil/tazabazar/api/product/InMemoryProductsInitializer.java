@@ -2,7 +2,6 @@ package com.kshitijpatil.tazabazar.api.product;
 
 import com.kshitijpatil.tazabazar.api.utils.MockDataFactory;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +16,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class InMemoryProductsInitializer implements ApplicationListener<ApplicationReadyEvent> {
-    private final Logger logger = LoggerFactory.getLogger(InMemoryProductsInitializer.class);
+    @Autowired
+    private Logger logger;
     private final AtomicInteger globalProductId = new AtomicInteger(0);
     private final Map<ProductCategory, String> categoryToSkuPrefix = new HashMap<>();
     @Autowired
