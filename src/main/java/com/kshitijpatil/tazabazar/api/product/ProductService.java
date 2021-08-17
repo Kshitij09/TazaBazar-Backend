@@ -9,6 +9,9 @@ public interface ProductService {
 
     ProductOutDto getProductById(int productId);
 
+    // Should create respective inventory as well
+    void addProduct(Product product);
+
     void updateProduct(int productId, ProductOutDto productDto);
 
     void deleteProduct(int productId);

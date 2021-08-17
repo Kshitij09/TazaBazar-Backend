@@ -20,7 +20,6 @@ enum ProductCategory {
         var name = name().replace("_", " ");
         return WordUtils.capitalizeFully(name, nameDelimiters);
     }
-
 }
 
 @NoArgsConstructor
@@ -29,6 +28,10 @@ enum ProductCategory {
 class CategoryDto {
     private int id;
     private String name;
+
+    public static CategoryDto fromProductCategory(ProductCategory category) {
+        return new CategoryDto(category.ordinal(), category.getDisplayName());
+    }
 }
 
 @NoArgsConstructor
