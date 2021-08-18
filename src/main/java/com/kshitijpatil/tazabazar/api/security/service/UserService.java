@@ -2,6 +2,7 @@ package com.kshitijpatil.tazabazar.api.security.service;
 
 import com.kshitijpatil.tazabazar.api.security.dto.CreateUserRequest;
 import com.kshitijpatil.tazabazar.api.security.dto.UserView;
+import com.kshitijpatil.tazabazar.api.security.jwt.RefreshTokenNotFoundException;
 import com.kshitijpatil.tazabazar.api.security.mappers.CreateUserRequestMapper;
 import com.kshitijpatil.tazabazar.api.security.mappers.UserMapper;
 import com.kshitijpatil.tazabazar.api.security.model.User;
@@ -42,5 +43,24 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user = userRepository.save(user);
         return UserMapper.toUserView(user);
+    }
+
+    @Override
+    public void storeRefreshToken(String username, String refreshToken) throws UsernameNotFoundException {
+        var user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+        user.setRefreshToken(refreshToken);
+        userRepository.update(user);
+    }
+
+    @Override
+    public UserView findUserWithRefreshToken(String refreshToken) throws RefreshTokenNotFoundException {
+        var user = userRepository.findByRefreshToken(refreshToken);
+        if (user.isPresent()) {
+            return UserMapper.toUserView(user.get());
+        } else {
+            throw new RefreshTokenNotFoundException();
+        }
     }
 }

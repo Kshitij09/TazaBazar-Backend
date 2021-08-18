@@ -1,6 +1,7 @@
-package com.kshitijpatil.tazabazar.api.security;
+package com.kshitijpatil.tazabazar.api.security.jwt;
 
 import com.kshitijpatil.tazabazar.api.security.repository.UserRepository;
+import com.kshitijpatil.tazabazar.api.security.service.JwtValidateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +28,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Qualifier("in_memory_user_repository")
     UserRepository userRepository;
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private JwtValidateService jwtValidateService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -41,14 +42,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         // Get JWT token and validate
         final String token = header.split(" ")[1].trim();
-        if (!jwtTokenUtil.validate(token)) {
+        if (!jwtValidateService.validateToken(token)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         // Get user identity and set it on Spring Security Context
         var userDetails = userRepository
-                .findByUsername(jwtTokenUtil.getUsername(token))
+                .findByUsername(jwtValidateService.getUsername(token))
                 .orElse(null);
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

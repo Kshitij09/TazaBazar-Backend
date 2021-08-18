@@ -19,6 +19,7 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private String fullName;
+    private String refreshToken;
     private Set<Role> authorities = new HashSet<>();
 
     public User(String username, String password, String fullName) {

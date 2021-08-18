@@ -1,5 +1,6 @@
 package com.kshitijpatil.tazabazar.api.security;
 
+import com.kshitijpatil.tazabazar.api.security.jwt.JwtTokenFilter;
 import com.kshitijpatil.tazabazar.api.security.repository.UserRepository;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
         // Set permissions on endpoints
         http.authorizeRequests()
-                // Swagger endpoints must be publicly accessible
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers(format("%s/**", restApiDocPath)).permitAll()
                 .antMatchers(format("%s/**", swaggerPath)).permitAll()

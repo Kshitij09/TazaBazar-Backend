@@ -21,10 +21,10 @@ public class CreateUserRequest {
     private String username;
     @NotBlank
     @NonNull
-    @JsonProperty("full_name")
-    private String fullName;
+    private String password;
     @NotBlank
     @NonNull
-    private String password;
+    @JsonProperty("full_name")
+    private String fullName;
     private Set<String> authorities = Collections.emptySet();
 }
