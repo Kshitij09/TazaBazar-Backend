@@ -1,9 +1,11 @@
 package com.kshitijpatil.tazabazar.api.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -14,20 +16,20 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class JsonDataSource {
-    @Autowired
-    private Logger logger;
+    private final Logger logger;
     private final ObjectMapper mapper = new ObjectMapper();
-    private @Setter
-    String fruitsFilepath = "classpath:json/fruits.json";
-    private @Setter
-    String dalsAndPulsesFilepath = "classpath:json/dals_and_pulses.json";
-    private @Setter
-    String leafyVegetablesFilepath = "classpath:json/leafy_vegetables.json";
-    private @Setter
-    String riceWheatAttaFilepath = "classpath:json/rice_wheat_atta.json";
-    private @Setter
-    String vegetablesFilepath = "classpath:json/vegetables.json";
+    @Value("classpath:json/fruits.json")
+    private String fruitsFilepath;
+    @Value("classpath:json/dals_and_pulses.json")
+    private String dalsAndPulsesFilepath;
+    @Value("classpath:json/leafy_vegetables.json")
+    private String leafyVegetablesFilepath;
+    @Value("classpath:json/vegetables.json")
+    private String vegetablesFilepath;
+    @Value("classpath:json/rice_wheat_atta.json")
+    String riceWheatAttaFilepath;
 
     private List<ProductInDto> readProductsFrom(String filepath) {
         try {
