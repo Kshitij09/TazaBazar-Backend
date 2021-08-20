@@ -9,6 +9,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,8 @@ public class InMemoryProductsInitializer implements ApplicationListener<Applicat
     @Autowired
     @Qualifier("in_memory_product")
     private ProductService productService;
-    @Value("${filestore.base-url}")
-    private String fileStoreBaseUrl;
+    @Value("${filestore.address}")
+    private String fileStoreAddress;
 
     private int getBaseRangeFor(ProductCategory category) {
         return (category.ordinal() + 1) * 1000;
@@ -34,7 +35,7 @@ public class InMemoryProductsInitializer implements ApplicationListener<Applicat
 
     private String getImageUriFor(String originalUri) {
         var filename = originalUri.substring(originalUri.lastIndexOf("/") + 1);
-        return fileStoreBaseUrl + filename;
+        return fileStoreAddress + Paths.get("/content", filename);
     }
 
     private void initCategoryToSkuPrefix() {

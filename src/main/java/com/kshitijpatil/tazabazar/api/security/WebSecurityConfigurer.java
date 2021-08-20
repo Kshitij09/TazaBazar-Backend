@@ -73,7 +73,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/products").permitAll()
-                .antMatchers(HttpMethod.GET, "/content/images/**").permitAll()
+                // Static Content
+                .antMatchers(HttpMethod.GET, "/content/**").permitAll()
                 .antMatchers(format("%s/**", restApiDocPath)).permitAll()
                 .antMatchers(format("%s/**", swaggerPath)).permitAll()
                 .anyRequest().authenticated();
