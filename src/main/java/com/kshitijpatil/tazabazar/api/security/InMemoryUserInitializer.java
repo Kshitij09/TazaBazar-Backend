@@ -25,7 +25,7 @@ public class InMemoryUserInitializer implements ApplicationListener<ApplicationR
         userService.create(userRequest);
 
         var adminRequest = new CreateUserRequest("admin", "0000", "John Doe");
-        adminRequest.setAuthorities(Set.of(Role.ADMIN));
+        adminRequest.setAuthorities(Set.of(Role.USER, Role.ADMIN));
         logger.info("Loaded 2 default users");
         userService.create(adminRequest);
     }

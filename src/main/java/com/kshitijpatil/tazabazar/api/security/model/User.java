@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -26,5 +28,11 @@ public class User implements UserDetails {
         this.username = username;
         this.password = password;
         this.fullName = fullName;
+    }
+
+    public List<String> getAuthorityStrings() {
+        return authorities.stream()
+                .map(Role::getAuthority)
+                .collect(Collectors.toList());
     }
 }

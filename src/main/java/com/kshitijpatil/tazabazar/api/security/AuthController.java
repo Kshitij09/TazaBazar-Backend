@@ -43,6 +43,7 @@ public class AuthController {
                     .username(user.getUsername())
                     .accessToken(jwtCreateService.generateToken(user.getUsername()))
                     .refreshToken(refreshToken)
+                    .authorities(user.getAuthorityStrings())
                     .build();
             return ResponseEntity.ok()
                     .body(userLoginResponse);
