@@ -63,7 +63,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(
                         (request, response, ex) -> {
-                            logger.error("Unauthorized request - {}", ex.getMessage());
+                            logger.error("Unauthorized request - {}", request.getRequestURI());
                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
                         }
                 )
@@ -71,6 +71,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
         // Set permissions on endpoints
         http.authorizeRequests()
+                //Public Endpoints
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/products").permitAll()
                 // Static Content
