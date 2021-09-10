@@ -1,9 +1,9 @@
 package com.kshitijpatil.tazabazar.configuration;
 
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -26,17 +26,17 @@ public class DataSourceConfig {
     @Primary
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource getDataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("org.postgresql.Driver");
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setDriverClassName("org.postgresql.Driver");
         var dbName = env.getProperty("env.DB_NAME", "test");
-        dataSourceBuilder.url("jdbc:postgresql://localhost:5432/" + dbName);
+        dataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/" + dbName);
         try {
             var password = Files.readString(Paths.get(passwordFilepath));
-            dataSourceBuilder.password(password);
+            dataSource.setPassword(password);
         } catch (IOException e) {
-            dataSourceBuilder.password("test");
+            dataSource.setPassword("test");
             e.printStackTrace();
         }
-        return dataSourceBuilder.build();
+        return dataSource;
     }
 }
