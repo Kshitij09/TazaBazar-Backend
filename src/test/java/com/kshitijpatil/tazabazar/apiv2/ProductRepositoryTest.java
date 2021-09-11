@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,10 +71,28 @@ public class ProductRepositoryTest {
         var inventory500gm = new Inventory("500gm", "25", Instant.now(), 100);
         carrot.addAll(inventory200gm, inventory500gm);
         template.insert(carrot);
-        var reloaded = inventories.findByIdAndSku(inventory200gm.id, carrot.sku);
+        var reloaded = inventories.findById(new InventoryId(inventory200gm.id, carrot.sku));
         assertThat(reloaded).isNotEmpty();
         assertThat(reloaded.get()).isEqualTo(inventory200gm);
         var inventoriesFromRepo = inventories.findAllBySku(carrot.sku);
         assertThat(inventoriesFromRepo).containsAll(carrot.inventories);
+    }
+
+    @Test
+    @Transactional
+    public void testInventoryFindAllByIdAndSkus() {
+        var vegetables = insertVegetablesCategory();
+        var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
+                "Carrot",
+                AggregateReference.to(vegetables.label));
+        var inventory200gm = new Inventory("200gm", "15", Instant.now(), 100);
+        var inventory500gm = new Inventory("500gm", "25", Instant.now(), 100);
+        carrot.addAll(inventory200gm, inventory500gm);
+        template.insert(carrot);
+        var reloaded = inventories.findAllById(
+                Arrays.asList(new InventoryId(1L, carrot.sku),
+                        new InventoryId(2L, carrot.sku))
+        );
+        assertThat(reloaded).isNotEmpty();
     }
 }
