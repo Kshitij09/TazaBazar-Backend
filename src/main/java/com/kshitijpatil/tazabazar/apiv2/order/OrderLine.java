@@ -2,6 +2,7 @@ package com.kshitijpatil.tazabazar.apiv2.order;
 
 import com.kshitijpatil.tazabazar.apiv2.product.Inventory;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.springframework.data.annotation.PersistenceConstructor;
 
@@ -14,6 +15,7 @@ public class OrderLine {
     public Long inventoryId;
     @Positive
     @Max(8)
+    @EqualsAndHashCode.Exclude
     public Long quantity;
 
     public OrderLine(Inventory inventory, Long quantity) {
