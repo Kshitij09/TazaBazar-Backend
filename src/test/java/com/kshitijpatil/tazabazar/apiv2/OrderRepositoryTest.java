@@ -70,6 +70,6 @@ public class OrderRepositoryTest {
         order.addAll(ol1, ol2);
         var saved = orders.save(order);
         var reloaded = assertNotEmptyAndGet(orders.findById(saved.getId()));
-        assertThat(reloaded.getOrderLines()).containsExactly(ol1, ol2);
+        assertThat(reloaded.getOrderLines()).containsOnly(ol1, ol2);
     }
 }
