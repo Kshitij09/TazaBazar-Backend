@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
@@ -18,6 +19,7 @@ import java.time.Instant;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestPostgreConfig.class)
@@ -94,5 +96,18 @@ public class ProductRepositoryTest {
                         new InventoryId(2L, carrot.sku))
         );
         assertThat(reloaded).isNotEmpty();
+    }
+
+    @Test
+    @Transactional
+    public void inventoryProductSkuAndQuantityLabelShouldBeUnique() {
+        var vegetables = insertVegetablesCategory();
+        var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
+                "Carrot",
+                AggregateReference.to(vegetables.label));
+        var inventory200gm = new Inventory("200gm", "15", Instant.now(), 100);
+        var inventory200gm2 = new Inventory("200gm", "20", Instant.now(), 20);
+        carrot.addAll(inventory200gm, inventory200gm2);
+        assertThatThrownBy(() -> template.insert(carrot)).hasCauseInstanceOf(DuplicateKeyException.class);
     }
 }

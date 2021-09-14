@@ -25,6 +25,7 @@ create table inventory(
     price numeric(10,2),
     updated_at timestamptz,
     stock_available integer check (stock_available >= 0),
+    unique (product_sku, quantity_label),
     foreign key (product_sku) references product(sku)
     on delete cascade
 );
