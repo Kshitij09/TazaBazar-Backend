@@ -3,12 +3,13 @@ package com.kshitijpatil.tazabazar.apiv2.order;
 import com.kshitijpatil.tazabazar.apiv2.product.Inventory;
 import lombok.AllArgsConstructor;
 import lombok.Value;
+import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Positive;
 
 @Value
-@AllArgsConstructor
+@AllArgsConstructor(onConstructor_ = @PersistenceConstructor)
 public class OrderLine {
     public Long inventoryId;
     public String productSku;

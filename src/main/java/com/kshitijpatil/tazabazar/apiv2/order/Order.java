@@ -38,8 +38,12 @@ public class Order {
         this.status = status;
     }
 
+    public static OrderLine createOrderLine(Inventory inventory, Long quantity) {
+        return new OrderLine(inventory.id, inventory.productSku.getId(), quantity);
+    }
+
     public void addOrderLine(Inventory inventory, Long quantity) {
-        var orderLine = new OrderLine(inventory.id, inventory.productSku.getId(), quantity);
+        var orderLine = createOrderLine(inventory, quantity);
         var cost = inventory.price.multiply(BigDecimal.valueOf(quantity));
         total = total.add(cost);
         orderLines.add(orderLine);

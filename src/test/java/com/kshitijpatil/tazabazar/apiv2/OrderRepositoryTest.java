@@ -4,7 +4,7 @@ import com.kshitijpatil.tazabazar.apiv2.order.Order;
 import com.kshitijpatil.tazabazar.apiv2.order.OrderRepository;
 import com.kshitijpatil.tazabazar.apiv2.product.*;
 import com.kshitijpatil.tazabazar.util.TestPostgreConfig;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -44,7 +45,7 @@ public class OrderRepositoryTest {
         return template.insert(vegetables);
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         var vegetables = insertVegetablesCategory();
         var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
@@ -57,9 +58,8 @@ public class OrderRepositoryTest {
     }
 
     @Test
-    //@Transactional
+    @Transactional
     public void testCreateOrder() {
-        //setup();
         var inv1 = inventories.findByIdAndSku(1L, "vgt-001");
         var inv2 = inventories.findByIdAndSku(2L, "vgt-001");
         assertThat(inv1).isNotEmpty();
@@ -67,6 +67,12 @@ public class OrderRepositoryTest {
         var order = new Order(Instant.now(), "Accepted");
         order.addOrderLine(inv1.get(), 4L);
         order.addOrderLine(inv2.get(), 6L);
-        orders.save(order);
+        var saved = orders.save(order);
+        var reloaded = orders.findById(saved.getId());
+        assertThat(reloaded).isNotEmpty();
+        assertThat(reloaded.get().getOrderLines()).containsExactly(
+                Order.createOrderLine(inv1.get(), 4L),
+                Order.createOrderLine(inv2.get(), 6L)
+        );
     }
 }
