@@ -20,19 +20,19 @@ public class Order {
     public final UUID id;
     public final Long userId;
     public Instant createdAt;
-    public String status;
+    public OrderStatus status;
     @MappedCollection(idColumn = "order_id")
     public Set<OrderLine> orderLines = new HashSet<>();
 
     @PersistenceConstructor
-    public Order(UUID id, Long userId, Instant createdAt, String status) {
+    public Order(UUID id, Long userId, Instant createdAt, OrderStatus status) {
         this.id = id;
         this.userId = userId;
         this.createdAt = createdAt;
         this.status = status;
     }
 
-    public Order(Long userId, Instant createdAt, String status) {
+    public Order(Long userId, Instant createdAt, OrderStatus status) {
         this.id = null;
         this.userId = userId;
         this.createdAt = createdAt;

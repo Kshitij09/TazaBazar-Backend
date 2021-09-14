@@ -2,6 +2,7 @@ package com.kshitijpatil.tazabazar.apiv2;
 
 import com.kshitijpatil.tazabazar.apiv2.order.Order;
 import com.kshitijpatil.tazabazar.apiv2.order.OrderRepository;
+import com.kshitijpatil.tazabazar.apiv2.order.OrderStatus;
 import com.kshitijpatil.tazabazar.apiv2.product.*;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.User;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.UserRepository;
@@ -17,6 +18,7 @@ import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -64,7 +66,7 @@ public class OrderRepositoryTest {
 
 
     @Test
-    //@Transactional
+    @Transactional
     public void testCreateOrder() {
         User user1 = new User("johndoe@test.com",
                 "1234",
@@ -75,7 +77,7 @@ public class OrderRepositoryTest {
 
         var inv1 = assertNotEmptyAndGet(inventories.findByIdAndSku(1L, "vgt-001"));
         var inv2 = assertNotEmptyAndGet(inventories.findByIdAndSku(2L, "vgt-001"));
-        var order = new Order(savedUser.id, Instant.now(), "Accepted");
+        var order = new Order(savedUser.id, Instant.now(), OrderStatus.ACCEPTED);
         var ol1 = Order.createOrderLine(inv1, 4L);
         var ol2 = Order.createOrderLine(inv2, 6L);
         order.addAll(ol1, ol2);
