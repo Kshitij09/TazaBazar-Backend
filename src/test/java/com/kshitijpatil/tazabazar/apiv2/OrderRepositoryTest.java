@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Optional;
 
+import static com.kshitijpatil.tazabazar.apiv2.TestUtils.assertNotEmptyAndGet;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -59,11 +59,6 @@ public class OrderRepositoryTest {
         template.insert(carrot);
     }
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private <T> T assertNotEmptyAndGet(Optional<T> item) {
-        assertThat(item).isNotEmpty();
-        return item.get();
-    }
 
     @Test
     @Transactional

@@ -4,6 +4,7 @@ drop table if exists purchase_order;
 drop table if exists inventory;
 drop table if exists product;
 drop table if exists product_category;
+drop table if exists user_detail;
 
 create table product_category(
     label varchar(50) primary key,
@@ -49,4 +50,15 @@ create table order_line(
     on delete cascade,
     foreign key (order_id) references purchase_order(id)
     on delete cascade
+);
+
+create table user_detail(
+    id serial primary key,
+    username text not null unique check(username <> ''),
+    password text not null check(password <> ''),
+    phone varchar(20) not null check(phone <> ''),
+    full_name text,
+    refresh_token text,
+    email_verified boolean default false,
+    phone_verified boolean default false
 );
