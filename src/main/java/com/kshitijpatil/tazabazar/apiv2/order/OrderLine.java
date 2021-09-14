@@ -7,21 +7,17 @@ import org.springframework.data.annotation.PersistenceConstructor;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Positive;
-import java.math.BigDecimal;
 
 @Value
 @AllArgsConstructor(onConstructor_ = @PersistenceConstructor)
 public class OrderLine {
     public Long inventoryId;
-    // for ease in calculations
-    public BigDecimal cost;
     @Positive
     @Max(8)
     public Long quantity;
 
     public OrderLine(Inventory inventory, Long quantity) {
         this.inventoryId = inventory.id;
-        this.cost = inventory.price.multiply(BigDecimal.valueOf(quantity));
         this.quantity = quantity;
     }
 }

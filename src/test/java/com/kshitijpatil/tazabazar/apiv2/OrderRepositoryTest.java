@@ -17,7 +17,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 
 import static com.kshitijpatil.tazabazar.apiv2.TestUtils.assertNotEmptyAndGet;
@@ -72,25 +71,5 @@ public class OrderRepositoryTest {
         var saved = orders.save(order);
         var reloaded = assertNotEmptyAndGet(orders.findById(saved.getId()));
         assertThat(reloaded.getOrderLines()).containsExactly(ol1, ol2);
-    }
-
-    @Test
-    @Transactional
-    public void testOrderTotals() {
-        var inv1 = assertNotEmptyAndGet(inventories.findByIdAndSku(1L, "vgt-001"));
-        var inv2 = assertNotEmptyAndGet(inventories.findByIdAndSku(2L, "vgt-001"));
-        long inv1Quantity = 4L, inv2Quantity = 6L;
-        var order = new Order(Instant.now(), "Accepted");
-        var ol1 = Order.createOrderLine(inv1, inv1Quantity);
-        var ol2 = Order.createOrderLine(inv2, inv2Quantity);
-        order.addAll(ol1, ol2);
-        var saved = orders.save(order);
-        var reloaded = assertNotEmptyAndGet(orders.findById(saved.getId()));
-        assertThat(reloaded.getOrderLines()).containsOnly(ol1, ol2);
-        var ol1Cost = inv1.price.multiply(BigDecimal.valueOf(inv1Quantity));
-        assertThat(ol1.cost).isEqualTo(ol1Cost);
-        var ol2Cost = inv2.price.multiply(BigDecimal.valueOf(inv2Quantity));
-        assertThat(ol2.cost).isEqualTo(ol2Cost);
-        assertThat(ol1Cost.add(ol2Cost)).isEqualTo(reloaded.getTotal());
     }
 }

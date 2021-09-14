@@ -36,7 +36,6 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 create table purchase_order(
     id uuid primary key default uuid_generate_v4(),
     created_at timestamptz not null default now(),
-    total numeric(15,2) not null check (total > 0),
     status varchar(20) not null check(status in ('Accepted','Pending','Dispatched','Delivered','Cancelled'))
 );
 
@@ -44,7 +43,6 @@ create table order_line(
     order_id uuid not null,
     inventory_id integer not null,
     quantity integer not null check(quantity > 0),
-    cost numeric(8,2) not null check(cost > 0),
     primary key(order_id, inventory_id),
     foreign key (inventory_id) references inventory(id)
     on delete cascade,
