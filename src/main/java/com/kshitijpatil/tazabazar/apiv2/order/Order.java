@@ -1,9 +1,11 @@
 package com.kshitijpatil.tazabazar.apiv2.order;
 
 import com.kshitijpatil.tazabazar.apiv2.product.Inventory;
+import com.kshitijpatil.tazabazar.apiv2.userdetail.User;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -18,23 +20,23 @@ import java.util.UUID;
 public class Order {
     @Id
     public final UUID id;
-    public final Long userId;
+    public final AggregateReference<User, String> username;
     public Instant createdAt;
     public OrderStatus status;
     @MappedCollection(idColumn = "order_id")
     public Set<OrderLine> orderLines = new HashSet<>();
 
     @PersistenceConstructor
-    public Order(UUID id, Long userId, Instant createdAt, OrderStatus status) {
+    public Order(UUID id, AggregateReference<User, String> username, Instant createdAt, OrderStatus status) {
         this.id = id;
-        this.userId = userId;
+        this.username = username;
         this.createdAt = createdAt;
         this.status = status;
     }
 
-    public Order(Long userId, Instant createdAt, OrderStatus status) {
+    public Order(AggregateReference<User, String> username, Instant createdAt, OrderStatus status) {
         this.id = null;
-        this.userId = userId;
+        this.username = username;
         this.createdAt = createdAt;
         this.status = status;
     }

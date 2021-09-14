@@ -17,7 +17,6 @@ import java.util.Set;
 @Data
 public class User implements Serializable {
     @Id
-    public final Long id;
     public String username;
     public String password;
     public String fullName;
@@ -25,11 +24,10 @@ public class User implements Serializable {
     public String refreshToken;
     public boolean emailVerified;
     public boolean phoneVerified;
-    @MappedCollection(idColumn = "user_id")
+    @MappedCollection(idColumn = "username")
     public Set<CartItem> cart = new HashSet<>();
 
     public User(String username, String password, String fullName, String phone, String refreshToken) {
-        this.id = null;
         this.username = username;
         this.password = password;
         this.fullName = fullName;

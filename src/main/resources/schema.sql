@@ -35,10 +35,9 @@ create table inventory(
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 create table user_detail(
-    id serial primary key,
-    username text not null unique check(username <> ''),
+    username text primary key check(username <> ''),
     password text not null check(password <> ''),
-    phone varchar(20) not null check(phone <> ''),
+    phone varchar(20) not null unique check(phone <> ''),
     full_name text,
     refresh_token text,
     email_verified boolean default false,
@@ -47,7 +46,7 @@ create table user_detail(
 
 create table purchase_order(
     id uuid primary key default uuid_generate_v4(),
-    user_id integer references user_detail(id)
+    username text references user_detail(username)
     on delete cascade,
     created_at timestamptz not null default now(),
     status varchar(20) not null check(status in ('Accepted','Pending','Dispatched','Delivered','Cancelled'))
@@ -65,12 +64,12 @@ create table order_line(
 );
 
 create table cart_item(
-    user_id integer not null,
+    username text not null,
     inventory_id integer not null,
     quantity integer not null check(quantity > 0),
-    primary key (user_id, inventory_id),
-    foreign key (inventory_id) references inventory(id)
+    primary key (username, inventory_id),
+    foreign key (username) references user_detail(username)
     on delete cascade,
-    foreign key (user_id) references user_detail(id)
+    foreign key (inventory_id) references inventory(id)
     on delete cascade
 );

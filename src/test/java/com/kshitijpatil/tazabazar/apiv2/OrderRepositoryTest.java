@@ -73,11 +73,11 @@ public class OrderRepositoryTest {
                 "John Doe",
                 "+919090909090",
                 "sajgf218y9ofba");
-        var savedUser = users.save(user1);
+        var savedUser = template.insert(user1);
 
         var inv1 = assertNotEmptyAndGet(inventories.findByIdAndSku(1L, "vgt-001"));
         var inv2 = assertNotEmptyAndGet(inventories.findByIdAndSku(2L, "vgt-001"));
-        var order = new Order(savedUser.id, Instant.now(), OrderStatus.ACCEPTED);
+        var order = new Order(AggregateReference.to(savedUser.username), Instant.now(), OrderStatus.ACCEPTED);
         var ol1 = Order.createOrderLine(inv1, 4L);
         var ol2 = Order.createOrderLine(inv2, 6L);
         order.addAll(ol1, ol2);

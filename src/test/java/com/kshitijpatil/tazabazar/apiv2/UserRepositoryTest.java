@@ -9,7 +9,6 @@ import com.kshitijpatil.tazabazar.apiv2.userdetail.UserRepository;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +17,6 @@ import java.time.Instant;
 
 import static com.kshitijpatil.tazabazar.apiv2.TestUtils.assertNotEmptyAndGet;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class UserRepositoryTest extends BaseRepositoryTest {
     @Autowired
@@ -28,13 +26,13 @@ public class UserRepositoryTest extends BaseRepositoryTest {
     @Autowired
     InventoryRepository inventories;
 
-    private User user1 = new User("johndoe@test.com",
+    private final User user1 = new User("johndoe@test.com",
             "1234",
             "John Doe",
             "+919090909090",
             "sajgf218y9ofba");
 
-    private User user2 = new User("jerrycan@test.com",
+    private final User user2 = new User("jerrycan@test.com",
             "7856",
             "Jerry Can",
             "+918219401924",
@@ -43,27 +41,24 @@ public class UserRepositoryTest extends BaseRepositoryTest {
     @Test
     @Transactional
     public void testRegisterUser() {
-        var user = users.save(user1);
-        assertThat(user.id).isNotNull();
-        var reloaded = assertNotEmptyAndGet(users.findById(user.id));
+        var user = template.insert(user1);
+        var reloaded = assertNotEmptyAndGet(users.findById(user.username));
         assertThat(reloaded).isEqualTo(user);
     }
 
     @Test
     @Transactional
     public void testFindByUsernamePassword() {
-        var user = users.save(user1);
+        var user = template.insert(user1);
         var reloadedUser = assertNotEmptyAndGet(users.findByUsernameAndPassword(user.username, user.password));
-        assertThat(reloadedUser.id).isNotNull();
         assertThat(reloadedUser).isEqualTo(user);
     }
 
     @Test
     @Transactional
     public void testFindByUsernameRefreshToken() {
-        var user = users.save(user1);
+        var user = template.insert(user1);
         var reloadedUser = assertNotEmptyAndGet(users.findByUsernameAndRefreshToken(user.username, user.refreshToken));
-        assertThat(reloadedUser.id).isNotNull();
         assertThat(reloadedUser).isEqualTo(user);
     }
 
@@ -88,8 +83,6 @@ public class UserRepositoryTest extends BaseRepositoryTest {
         var inv2 = assertNotEmptyAndGet(inventories.findByIdAndSku(2L, "vgt-001"));
         user.addToCart(inv1, 2L);
         user.addToCart(inv2, 3L);
-        users.save(user);
-        user.addToCart(inv1, 5L);
-        assertThatThrownBy(() -> users.save(user)).hasCauseInstanceOf(DuplicateKeyException.class);
+        template.insert(user);
     }
 }
