@@ -17,7 +17,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,22 +59,43 @@ public class OrderRepositoryTest {
         template.insert(carrot);
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private <T> T assertNotEmptyAndGet(Optional<T> item) {
+        assertThat(item).isNotEmpty();
+        return item.get();
+    }
+
     @Test
     @Transactional
     public void testCreateOrder() {
-        var inv1 = inventories.findByIdAndSku(1L, "vgt-001");
-        var inv2 = inventories.findByIdAndSku(2L, "vgt-001");
-        assertThat(inv1).isNotEmpty();
-        assertThat(inv2).isNotEmpty();
+        var inv1 = assertNotEmptyAndGet(inventories.findByIdAndSku(1L, "vgt-001"));
+        var inv2 = assertNotEmptyAndGet(inventories.findByIdAndSku(2L, "vgt-001"));
         var order = new Order(Instant.now(), "Accepted");
-        order.addOrderLine(inv1.get(), 4L);
-        order.addOrderLine(inv2.get(), 6L);
+        var ol1 = Order.createOrderLine(inv1, 4L);
+        var ol2 = Order.createOrderLine(inv2, 6L);
+        order.addAll(ol1, ol2);
         var saved = orders.save(order);
-        var reloaded = orders.findById(saved.getId());
-        assertThat(reloaded).isNotEmpty();
-        assertThat(reloaded.get().getOrderLines()).containsExactly(
-                Order.createOrderLine(inv1.get(), 4L),
-                Order.createOrderLine(inv2.get(), 6L)
-        );
+        var reloaded = assertNotEmptyAndGet(orders.findById(saved.getId()));
+        assertThat(reloaded.getOrderLines()).containsExactly(ol1, ol2);
+    }
+
+    @Test
+    @Transactional
+    public void testOrderTotals() {
+        var inv1 = assertNotEmptyAndGet(inventories.findByIdAndSku(1L, "vgt-001"));
+        var inv2 = assertNotEmptyAndGet(inventories.findByIdAndSku(2L, "vgt-001"));
+        long inv1Quantity = 4L, inv2Quantity = 6L;
+        var order = new Order(Instant.now(), "Accepted");
+        var ol1 = Order.createOrderLine(inv1, inv1Quantity);
+        var ol2 = Order.createOrderLine(inv2, inv2Quantity);
+        order.addAll(ol1, ol2);
+        var saved = orders.save(order);
+        var reloaded = assertNotEmptyAndGet(orders.findById(saved.getId()));
+        assertThat(reloaded.getOrderLines()).containsOnly(ol1, ol2);
+        var ol1Cost = inv1.price.multiply(BigDecimal.valueOf(inv1Quantity));
+        assertThat(ol1.cost).isEqualTo(ol1Cost);
+        var ol2Cost = inv2.price.multiply(BigDecimal.valueOf(inv2Quantity));
+        assertThat(ol2.cost).isEqualTo(ol2Cost);
+        assertThat(ol1Cost.add(ol2Cost)).isEqualTo(reloaded.getTotal());
     }
 }

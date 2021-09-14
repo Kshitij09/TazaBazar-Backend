@@ -19,13 +19,12 @@ create table product(
 );
 
 create table inventory(
-    id serial,
+    id serial primary key,
     product_sku varchar(80),
     quantity_label text,
     price numeric(10,2),
     updated_at timestamptz,
     stock_available integer check (stock_available >= 0),
-    primary key (id, product_sku),
     foreign key (product_sku) references product(sku)
     on delete cascade
 );
@@ -35,16 +34,17 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 create table purchase_order(
     id uuid primary key default uuid_generate_v4(),
     created_at timestamptz not null default now(),
+    total numeric(15,2) not null check (total > 0),
     status varchar(20) not null check(status in ('Accepted','Pending','Dispatched','Delivered','Cancelled'))
 );
 
 create table order_line(
     order_id uuid not null,
     inventory_id integer not null,
-    product_sku text not null,
     quantity integer not null check(quantity > 0),
-    primary key (order_id, inventory_id, product_sku),
-    foreign key (inventory_id, product_sku) references inventory(id, product_sku)
+    cost numeric(8,2) not null check(cost > 0),
+    primary key(order_id, inventory_id),
+    foreign key (inventory_id) references inventory(id)
     on delete cascade,
     foreign key (order_id) references purchase_order(id)
     on delete cascade
