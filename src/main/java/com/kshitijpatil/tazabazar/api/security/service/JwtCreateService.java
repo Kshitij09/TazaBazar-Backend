@@ -13,12 +13,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class JwtCreateService {
     private static final String CLAIM_USERNAME = "username";
+    private static final String CLAIM_ROLES = "roles";
     private final JwtConfig jwtConfig;
     private final JwtPrivateKeyProvider jwtPrivateKeyProvider;
     private final DateUtil dateUtil;
@@ -27,7 +29,7 @@ public class JwtCreateService {
     private final String jwtIssuer = "com.kshitijpatil.tazabazar";
 
 
-    public String generateToken(String username) {
+    public String generateToken(String username, List<String> roles) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expiryDate = now.plusMinutes(jwtConfig.getExpirationInMinutes());
         return Jwts.builder()
@@ -37,6 +39,7 @@ public class JwtCreateService {
                 .setId(UUID.randomUUID().toString())
                 .signWith(SignatureAlgorithm.RS256, jwtPrivateKeyProvider.getPrivateKey())
                 .claim(CLAIM_USERNAME, username)
+                .claim(CLAIM_ROLES, roles.toArray())
                 .compact();
     }
 

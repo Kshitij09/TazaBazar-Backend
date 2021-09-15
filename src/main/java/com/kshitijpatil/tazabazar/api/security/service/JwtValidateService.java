@@ -7,10 +7,13 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class JwtValidateService {
     private static final String CLAIM_USERNAME = "username";
+    private static final String CLAIM_ROLES = "roles";
     private final JwtPublicKeyProvider jwtPublicKeyProvider;
     private final Logger logger;
 
@@ -36,6 +39,11 @@ public class JwtValidateService {
 
     public String getUsername(String token) {
         return (String) getClaims(token).get(CLAIM_USERNAME);
+    }
+
+    public List<String> getRoles(String token) {
+        var roles = (String[]) getClaims(token).get(CLAIM_ROLES);
+        return List.of(roles);
     }
 
     private Claims getClaims(String token) {

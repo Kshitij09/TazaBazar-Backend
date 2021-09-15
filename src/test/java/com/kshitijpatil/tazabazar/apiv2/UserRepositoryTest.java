@@ -9,8 +9,10 @@ import com.kshitijpatil.tazabazar.apiv2.userdetail.UserRepository;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
+import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
@@ -58,7 +60,7 @@ public class UserRepositoryTest extends BaseRepositoryTest {
     @Transactional
     public void testFindByUsernameRefreshToken() {
         var user = template.insert(user1);
-        var reloadedUser = assertNotEmptyAndGet(users.findByUsernameAndRefreshToken(user.username, user.refreshToken));
+        var reloadedUser = assertNotEmptyAndGet(users.findByRefreshToken(user.refreshToken));
         assertThat(reloadedUser).isEqualTo(user);
     }
 
@@ -72,6 +74,36 @@ public class UserRepositoryTest extends BaseRepositoryTest {
         var inventory500gm = new Inventory("500gm", "25", Instant.now(), 100);
         carrot.addAll(inventory200gm, inventory500gm);
         template.insert(carrot);
+    }
+
+    @Test
+    @Transactional
+    public void testUniquePhoneConstraint() {
+        template.insert(user1);
+        var newUser = SerializationUtils.clone(user1);
+        newUser.username = "mike@test.com";
+        try {
+            template.insert(newUser);
+        } catch (DbActionExecutionException exception) {
+            var cause = exception.getCause();
+            assertThat(cause).isInstanceOf(DuplicateKeyException.class);
+            assertThat(cause.getMessage()).contains("violates unique constraint \"user_detail_phone_key\"");
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testUniqueUsernameConstraint() {
+        template.insert(user1);
+        var newUser = SerializationUtils.clone(user1);
+        newUser.phone = "1234567890";
+        try {
+            template.insert(newUser);
+        } catch (DbActionExecutionException exception) {
+            var cause = exception.getCause();
+            assertThat(cause).isInstanceOf(DuplicateKeyException.class);
+            assertThat(cause.getMessage()).contains("violates unique constraint \"user_detail_pkey\"");
+        }
     }
 
     @Test

@@ -1,10 +1,8 @@
 package com.kshitijpatil.tazabazar.api.security;
 
 import com.kshitijpatil.tazabazar.api.security.jwt.JwtTokenFilter;
-import com.kshitijpatil.tazabazar.api.security.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -13,9 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -25,27 +21,23 @@ import org.springframework.web.filter.CorsFilter;
 import javax.servlet.http.HttpServletResponse;
 
 import static java.lang.String.format;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
-    @Autowired
-    @Qualifier("in_memory_user_repository")
-    UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
+    private final JwtTokenFilter jwtTokenFilter;
+    private final PasswordEncoder passwordEncoder;
+    private final Logger logger;
     @Value("${springdoc.api-docs.path}")
     private String restApiDocPath;
     @Value("${springdoc.swagger-ui.path}")
     private String swaggerPath;
-    @Autowired
-    private JwtTokenFilter jwtTokenFilter;
-    @Autowired
-    private Logger logger;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(username -> userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(format("User: %s, not found", username)))
-        );
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -54,25 +46,21 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http = http.cors().and().csrf().disable();
 
         // Set session management to stateless
-        http = http.sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and();
+        http = http.sessionManagement().sessionCreationPolicy(STATELESS).and();
 
         // Set unauthorized requests exception handler
-        http = http
-                .exceptionHandling()
-                .authenticationEntryPoint(
-                        (request, response, ex) -> {
-                            logger.error("Unauthorized request - {}", request.getRequestURI());
-                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
-                        }
-                )
-                .and();
+        http = http.exceptionHandling().authenticationEntryPoint(
+                (request, response, ex) -> {
+                    logger.error("Unauthorized request - {}", request.getRequestURI());
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+                }
+        ).and();
 
         // Set permissions on endpoints
         http.authorizeRequests()
                 //Public Endpoints
                 .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/v2/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/products").permitAll()
                 // Static Content
                 .antMatchers(HttpMethod.GET, "/content/**").permitAll()
@@ -102,10 +90,5 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }
