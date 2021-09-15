@@ -14,6 +14,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@Deprecated
 public class CreateUserRequest {
     @NotBlank
     @NonNull

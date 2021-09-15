@@ -10,6 +10,7 @@ import com.kshitijpatil.tazabazar.api.security.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,9 @@ import javax.validation.ValidationException;
 
 import static java.lang.String.format;
 
-@Service
-public class UserService implements IUserService {
+@Service("in_memory_user_service")
+@Deprecated
+public class UserService implements IUserService, UserDetailsService {
 
     @Autowired
     @Qualifier("in_memory_user_repository")

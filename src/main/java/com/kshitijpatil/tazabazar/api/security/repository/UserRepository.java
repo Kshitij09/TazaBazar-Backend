@@ -4,6 +4,7 @@ import com.kshitijpatil.tazabazar.api.security.model.User;
 
 import java.util.Optional;
 
+@Deprecated
 public interface UserRepository {
     Optional<User> findByUsername(String username);
 

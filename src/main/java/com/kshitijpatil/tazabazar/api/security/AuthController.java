@@ -19,6 +19,7 @@ import javax.validation.Valid;
 @Tag(name = "Authentication")
 @RestController
 @RequestMapping("/api/auth")
+@Deprecated
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -37,13 +38,14 @@ public class AuthController {
             );
             // At this point, the user has been validated
             User user = (User) authenticate.getPrincipal();
+            var roles = user.getAuthorityStrings();
             var refreshToken = jwtCreateService.generateRefreshToken();
             userService.storeRefreshToken(user.getUsername(), refreshToken);
             var userLoginResponse = UserLoginResponse.builder()
                     .username(user.getUsername())
-                    .accessToken(jwtCreateService.generateToken(user.getUsername()))
+                    .accessToken(jwtCreateService.generateToken(user.getUsername(), roles))
                     .refreshToken(refreshToken)
-                    .authorities(user.getAuthorityStrings())
+                    .authorities(roles)
                     .build();
             return ResponseEntity.ok()
                     .body(userLoginResponse);
@@ -60,7 +62,7 @@ public class AuthController {
     @PostMapping("token")
     public RefreshTokenResponse refreshToken(@RequestHeader("refresh-token") String token) {
         var user = userService.findUserWithRefreshToken(token);
-        var accessToken = jwtCreateService.generateToken(user.getUsername());
+        var accessToken = jwtCreateService.generateToken(user.getUsername(), user.getRoles());
         return new RefreshTokenResponse(accessToken);
     }
 

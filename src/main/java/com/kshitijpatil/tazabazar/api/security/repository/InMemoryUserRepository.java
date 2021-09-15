@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository("in_memory_user_repository")
+@Deprecated
 public class InMemoryUserRepository implements UserRepository {
     private final Map<String, User> usernameToUserMap = new ConcurrentHashMap<>();
     private final Map<String, User> refreshTokenToUserMap = new ConcurrentHashMap<>();

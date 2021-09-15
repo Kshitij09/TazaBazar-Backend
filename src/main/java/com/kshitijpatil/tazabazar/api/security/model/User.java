@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
+@Deprecated
 public class User implements UserDetails {
     private final boolean isAccountNonExpired = true;
     private final boolean isAccountNonLocked = true;

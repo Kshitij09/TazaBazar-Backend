@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 @Component
+@Deprecated
 public class InMemoryUserInitializer implements ApplicationListener<ApplicationReadyEvent> {
     @Autowired
     UserService userService;

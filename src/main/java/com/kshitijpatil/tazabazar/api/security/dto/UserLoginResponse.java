@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
+@Deprecated
 public class UserLoginResponse {
     String username;
     @JsonProperty("access_token")

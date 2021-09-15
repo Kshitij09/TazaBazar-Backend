@@ -6,6 +6,7 @@ import com.kshitijpatil.tazabazar.api.security.model.User;
 
 import java.util.stream.Collectors;
 
+@Deprecated
 public class CreateUserRequestMapper {
     public static User toUser(CreateUserRequest createUserRequest) {
         var user = new User();
