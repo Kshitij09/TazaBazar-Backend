@@ -3,6 +3,7 @@ package com.kshitijpatil.tazabazar.api;
 import com.kshitijpatil.tazabazar.api.inventory.InMemoryInventoryService.InventoryNotFoundException;
 import com.kshitijpatil.tazabazar.api.product.InMemoryProductService.ProductNotFoundException;
 import com.kshitijpatil.tazabazar.api.security.jwt.RefreshTokenNotFoundException;
+import com.kshitijpatil.tazabazar.apiv2.userauth.RoleNotFoundException;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.PhoneExistsException;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.UsernameExistsException;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,11 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(UsernameExistsException.class)
     public ResponseEntity<ApiErrorResponse> handleApiException(UsernameExistsException ex) {
+        return getResponseEntityFor(ex, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ApiErrorResponse> handleApiException(RoleNotFoundException ex) {
         return getResponseEntityFor(ex, HttpStatus.BAD_REQUEST);
     }
 

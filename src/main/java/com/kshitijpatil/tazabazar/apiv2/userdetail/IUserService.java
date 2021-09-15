@@ -8,7 +8,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public interface IUserService {
     UserView createUser(CreateUserRequest user) throws UsernameExistsException, PhoneExistsException;
 
-    UserView storeRefreshTokenFor(String username, String refreshToken) throws UsernameNotFoundException;
+    void storeRefreshTokenFor(String username, String refreshToken) throws UsernameNotFoundException;
+
+    UserView loadUserViewByUsername(String username) throws UsernameNotFoundException;
 
     UserView loadUserByRefreshToken(String refreshToken) throws RefreshTokenNotFoundException;
 }

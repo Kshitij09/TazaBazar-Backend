@@ -40,13 +40,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
-        var roles = jwtValidateService.getRoles(token)
+        var claimExtractor = new JwtClaimExtractor(jwtValidateService.getClaims(token));
+        var roles = claimExtractor.getRoles()
                 .stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                jwtValidateService.getUsername(token), null, roles
+                claimExtractor.getUsername(), null, roles
         );
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);

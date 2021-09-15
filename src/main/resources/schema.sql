@@ -5,6 +5,9 @@ drop table if exists cart_item;
 drop table if exists inventory;
 drop table if exists product;
 drop table if exists product_category;
+drop table if exists authorized;
+drop table if exists user_role;
+drop table if exists user_auth;
 drop table if exists user_detail;
 
 create table product_category(
@@ -36,12 +39,30 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 create table user_detail(
     username text primary key check(username <> ''),
-    password text not null check(password <> ''),
     phone varchar(20) not null unique check(phone <> ''),
-    full_name text,
+    full_name text
+);
+
+create table user_role(name varchar(50) primary key);
+
+create table user_auth(
+    username text primary key,
+    password text not null check(password <> ''),
     refresh_token text,
     email_verified boolean default false,
-    phone_verified boolean default false
+    phone_verified boolean default false,
+    foreign key (username) references user_detail(username)
+    on delete cascade
+);
+
+create table authorized(
+    username text not null,
+    role varchar(50) not null,
+    primary key (username, role),
+    foreign key (username) references user_auth(username)
+    on delete cascade,
+    foreign key (role) references user_role(name)
+    on delete cascade
 );
 
 create table purchase_order(

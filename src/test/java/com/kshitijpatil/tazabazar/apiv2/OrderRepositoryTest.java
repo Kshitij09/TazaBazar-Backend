@@ -69,10 +69,8 @@ public class OrderRepositoryTest {
     @Transactional
     public void testCreateOrder() {
         User user1 = new User("johndoe@test.com",
-                "1234",
                 "John Doe",
-                "+919090909090",
-                "sajgf218y9ofba");
+                "+919090909090");
         var savedUser = template.insert(user1);
 
         var inv1 = assertNotEmptyAndGet(inventories.findByIdAndSku(1L, "vgt-001"));

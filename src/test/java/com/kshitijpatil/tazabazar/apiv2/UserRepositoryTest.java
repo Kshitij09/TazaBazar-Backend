@@ -29,16 +29,12 @@ public class UserRepositoryTest extends BaseRepositoryTest {
     InventoryRepository inventories;
 
     private final User user1 = new User("johndoe@test.com",
-            "1234",
             "John Doe",
-            "+919090909090",
-            "sajgf218y9ofba");
+            "+919090909090");
 
     private final User user2 = new User("jerrycan@test.com",
-            "7856",
             "Jerry Can",
-            "+918219401924",
-            "v7t912ofvbas");
+            "+918219401924");
 
     @Test
     @Transactional
@@ -46,22 +42,6 @@ public class UserRepositoryTest extends BaseRepositoryTest {
         var user = template.insert(user1);
         var reloaded = assertNotEmptyAndGet(users.findById(user.username));
         assertThat(reloaded).isEqualTo(user);
-    }
-
-    @Test
-    @Transactional
-    public void testFindByUsernamePassword() {
-        var user = template.insert(user1);
-        var reloadedUser = assertNotEmptyAndGet(users.findByUsernameAndPassword(user.username, user.password));
-        assertThat(reloadedUser).isEqualTo(user);
-    }
-
-    @Test
-    @Transactional
-    public void testFindByUsernameRefreshToken() {
-        var user = template.insert(user1);
-        var reloadedUser = assertNotEmptyAndGet(users.findByRefreshToken(user.refreshToken));
-        assertThat(reloadedUser).isEqualTo(user);
     }
 
     private void populateProductInventories() {
