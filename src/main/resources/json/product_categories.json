@@ -1,0 +1,27 @@
+[
+  {
+    "label": "vegetables",
+    "sku_prefix": "vgt",
+    "name": "Vegetables"
+  },
+  {
+    "label": "fruits",
+    "sku_prefix": "fru",
+    "name": "Fruits"
+  },
+  {
+    "label": "leafy-vegetables",
+    "sku_prefix": "lfvgt",
+    "name": "Leafy Vegetables"
+  },
+  {
+    "label": "dals-and-pulses",
+    "sku_prefix": "dlpl",
+    "name": "Dals and Pulses"
+  },
+  {
+    "label": "rice-wheat-atta",
+    "sku_prefix": "rcwhtat",
+    "name": "Rice Wheat Atta"
+  }
+]

@@ -1,10 +1,9 @@
 package com.kshitijpatil.tazabazar.api.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kshitijpatil.tazabazar.apiv2.dto.ProductCategoryDto;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -30,6 +29,8 @@ public class JsonDataSource {
     private String vegetablesFilepath;
     @Value("classpath:json/rice_wheat_atta.json")
     String riceWheatAttaFilepath;
+    @Value("classpath:json/product_categories.json")
+    String productCategoriesFilepath;
 
     private List<ProductInDto> readProductsFrom(String filepath) {
         try {
@@ -39,6 +40,18 @@ public class JsonDataSource {
             return Arrays.asList(fruits);
         } catch (IOException e) {
             logger.error("Failed to read from " + filepath, e);
+            return Collections.emptyList();
+        }
+    }
+
+    public List<ProductCategoryDto> getProductCategories() {
+        try {
+            File file = ResourceUtils.getFile(productCategoriesFilepath);
+            ProductCategoryDto[] categories = mapper.readValue(file, ProductCategoryDto[].class);
+            logger.debug("Read " + categories.length + " objects from " + productCategoriesFilepath);
+            return Arrays.asList(categories);
+        } catch (IOException e) {
+            logger.error("Failed to read from " + productCategoriesFilepath, e);
             return Collections.emptyList();
         }
     }

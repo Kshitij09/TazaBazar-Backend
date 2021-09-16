@@ -43,4 +43,22 @@ public class MockDataFactory {
         inventory.setModifiedAt(OffsetDateTime.now());
         return inventory;
     }
+
+    public static boolean getRandomBoolean() {
+        return generator.nextBoolean();
+    }
+
+    public static int getRandomInt(int bound) {
+        return generator.nextInt(bound);
+    }
+
+    /**
+     * Returns a random bounded stock value with probability threshold for
+     * returning not available (0). If a random probability is greater than
+     * given threshold, 0 is returned.
+     */
+    public static int getRandomStock(int bound, int notAvailableThreshold) {
+        var isAvailableProbability = MockDataFactory.getRandomInt(100) + 1;
+        return isAvailableProbability > notAvailableThreshold ? MockDataFactory.getRandomInt(bound) + 1 : 0;
+    }
 }
