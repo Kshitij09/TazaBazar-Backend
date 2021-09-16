@@ -1,4 +1,4 @@
-package com.kshitijpatil.tazabazar.api.security;
+package com.kshitijpatil.tazabazar.configuration;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;

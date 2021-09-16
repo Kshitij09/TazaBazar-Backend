@@ -1,4 +1,4 @@
-package com.kshitijpatil.tazabazar.api;
+package com.kshitijpatil.tazabazar;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

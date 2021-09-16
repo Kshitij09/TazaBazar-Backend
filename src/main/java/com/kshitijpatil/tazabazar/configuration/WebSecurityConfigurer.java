@@ -1,6 +1,6 @@
-package com.kshitijpatil.tazabazar.api.security;
+package com.kshitijpatil.tazabazar.configuration;
 
-import com.kshitijpatil.tazabazar.api.security.jwt.JwtTokenFilter;
+import com.kshitijpatil.tazabazar.security.jwt.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;

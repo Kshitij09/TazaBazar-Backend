@@ -1,4 +1,4 @@
-package com.kshitijpatil.tazabazar.api.security.dto;
+package com.kshitijpatil.tazabazar.security.dto;
 
 import lombok.Data;
 

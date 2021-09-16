@@ -2,7 +2,7 @@ package com.kshitijpatil.tazabazar.api.security.service;
 
 import com.kshitijpatil.tazabazar.api.security.dto.CreateUserRequest;
 import com.kshitijpatil.tazabazar.api.security.dto.UserView;
-import com.kshitijpatil.tazabazar.api.security.jwt.RefreshTokenNotFoundException;
+import com.kshitijpatil.tazabazar.security.jwt.RefreshTokenNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import javax.validation.ValidationException;

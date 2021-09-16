@@ -1,6 +1,6 @@
 package com.kshitijpatil.tazabazar.utils;
 
-import com.kshitijpatil.tazabazar.api.security.jwt.JwtInitializationException;
+import com.kshitijpatil.tazabazar.security.jwt.JwtInitializationException;
 
 import java.io.IOException;
 import java.security.Key;

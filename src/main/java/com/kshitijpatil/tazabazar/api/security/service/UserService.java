@@ -2,11 +2,11 @@ package com.kshitijpatil.tazabazar.api.security.service;
 
 import com.kshitijpatil.tazabazar.api.security.dto.CreateUserRequest;
 import com.kshitijpatil.tazabazar.api.security.dto.UserView;
-import com.kshitijpatil.tazabazar.api.security.jwt.RefreshTokenNotFoundException;
 import com.kshitijpatil.tazabazar.api.security.mappers.CreateUserRequestMapper;
 import com.kshitijpatil.tazabazar.api.security.mappers.UserMapper;
 import com.kshitijpatil.tazabazar.api.security.model.User;
 import com.kshitijpatil.tazabazar.api.security.repository.UserRepository;
+import com.kshitijpatil.tazabazar.security.jwt.RefreshTokenNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;

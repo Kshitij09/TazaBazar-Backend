@@ -1,7 +1,7 @@
-package com.kshitijpatil.tazabazar.api.security.service;
+package com.kshitijpatil.tazabazar.security;
 
 
-import com.kshitijpatil.tazabazar.api.security.jwt.JwtPublicKeyProvider;
+import com.kshitijpatil.tazabazar.security.jwt.JwtPublicKeyProvider;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

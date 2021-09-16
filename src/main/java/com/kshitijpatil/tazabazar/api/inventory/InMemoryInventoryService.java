@@ -1,6 +1,6 @@
 package com.kshitijpatil.tazabazar.api.inventory;
 
-import com.kshitijpatil.tazabazar.api.ApiError;
+import com.kshitijpatil.tazabazar.ApiError;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Service;

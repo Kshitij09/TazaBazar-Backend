@@ -1,6 +1,6 @@
 package com.kshitijpatil.tazabazar.api.product;
 
-import com.kshitijpatil.tazabazar.api.ApiError;
+import com.kshitijpatil.tazabazar.ApiError;
 import com.kshitijpatil.tazabazar.api.inventory.InventoryMapper;
 import com.kshitijpatil.tazabazar.api.inventory.InventoryService;
 import lombok.AllArgsConstructor;

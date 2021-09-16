@@ -1,11 +1,11 @@
-package com.kshitijpatil.tazabazar.api;
+package com.kshitijpatil.tazabazar;
 
 import com.kshitijpatil.tazabazar.api.inventory.InMemoryInventoryService.InventoryNotFoundException;
 import com.kshitijpatil.tazabazar.api.product.InMemoryProductService.ProductNotFoundException;
-import com.kshitijpatil.tazabazar.api.security.jwt.RefreshTokenNotFoundException;
 import com.kshitijpatil.tazabazar.apiv2.userauth.RoleNotFoundException;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.PhoneExistsException;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.UsernameExistsException;
+import com.kshitijpatil.tazabazar.security.jwt.RefreshTokenNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

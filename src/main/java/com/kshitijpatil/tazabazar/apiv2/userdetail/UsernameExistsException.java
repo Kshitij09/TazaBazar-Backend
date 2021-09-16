@@ -1,6 +1,6 @@
 package com.kshitijpatil.tazabazar.apiv2.userdetail;
 
-import com.kshitijpatil.tazabazar.api.ApiError;
+import com.kshitijpatil.tazabazar.ApiError;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

@@ -1,10 +1,10 @@
 package com.kshitijpatil.tazabazar.apiv2.userdetail;
 
-import com.kshitijpatil.tazabazar.api.security.jwt.RefreshTokenNotFoundException;
 import com.kshitijpatil.tazabazar.apiv2.dto.CreateUserRequest;
 import com.kshitijpatil.tazabazar.apiv2.dto.UserAuthView;
 import com.kshitijpatil.tazabazar.apiv2.dto.UserView;
 import com.kshitijpatil.tazabazar.apiv2.userauth.*;
+import com.kshitijpatil.tazabazar.security.jwt.RefreshTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DuplicateKeyException;
