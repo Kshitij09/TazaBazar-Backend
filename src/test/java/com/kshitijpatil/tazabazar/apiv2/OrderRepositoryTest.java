@@ -18,7 +18,6 @@ import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -58,15 +57,15 @@ public class OrderRepositoryTest {
         var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
                 "Carrot",
                 AggregateReference.to(vegetables.label));
-        var inventory200gm = new Inventory("200gm", "15", Instant.now(), 100);
-        var inventory500gm = new Inventory("500gm", "25", Instant.now(), 100);
+        var inventory200gm = new Inventory("200gm", 15., Instant.now(), 100);
+        var inventory500gm = new Inventory("500gm", 25., Instant.now(), 100);
         carrot.addAll(inventory200gm, inventory500gm);
         template.insert(carrot);
     }
 
 
     @Test
-    @Transactional
+    //@Transactional
     public void testCreateOrder() {
         User user1 = new User("johndoe@test.com",
                 "John Doe",

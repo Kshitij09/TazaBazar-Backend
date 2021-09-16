@@ -69,8 +69,8 @@ public class ProductRepositoryTest {
         var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
                 "Carrot",
                 AggregateReference.to(vegetables.label));
-        var inventory200gm = new Inventory("200gm", "15", Instant.now(), 100);
-        var inventory500gm = new Inventory("500gm", "25", Instant.now(), 100);
+        var inventory200gm = new Inventory("200gm", 15.0, Instant.now(), 100);
+        var inventory500gm = new Inventory("500gm", 25.0, Instant.now(), 100);
         carrot.addAll(inventory200gm, inventory500gm);
         template.insert(carrot);
         var reloaded = inventories.findById(new InventoryId(inventory200gm.id, carrot.sku));
@@ -87,8 +87,8 @@ public class ProductRepositoryTest {
         var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
                 "Carrot",
                 AggregateReference.to(vegetables.label));
-        var inventory200gm = new Inventory("200gm", "15", Instant.now(), 100);
-        var inventory500gm = new Inventory("500gm", "25", Instant.now(), 100);
+        var inventory200gm = new Inventory("200gm", 15.0, Instant.now(), 100);
+        var inventory500gm = new Inventory("500gm", 25.0, Instant.now(), 100);
         carrot.addAll(inventory200gm, inventory500gm);
         template.insert(carrot);
         var reloaded = inventories.findAllById(
@@ -105,8 +105,8 @@ public class ProductRepositoryTest {
         var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
                 "Carrot",
                 AggregateReference.to(vegetables.label));
-        var inventory200gm = new Inventory("200gm", "15", Instant.now(), 100);
-        var inventory200gm2 = new Inventory("200gm", "20", Instant.now(), 20);
+        var inventory200gm = new Inventory("200gm", 15., Instant.now(), 100);
+        var inventory200gm2 = new Inventory("200gm", 20., Instant.now(), 20);
         carrot.addAll(inventory200gm, inventory200gm2);
         assertThatThrownBy(() -> template.insert(carrot)).hasCauseInstanceOf(DuplicateKeyException.class);
     }

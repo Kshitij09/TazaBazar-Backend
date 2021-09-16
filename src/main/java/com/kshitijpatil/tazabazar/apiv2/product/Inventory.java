@@ -7,7 +7,6 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.Instant;
 
 @Data
@@ -32,9 +31,9 @@ public class Inventory {
         this.stockAvailable = stockAvailable;
     }
 
-    public Inventory(String quantityLabel, String price, Instant updatedAt, Integer stockAvailable) {
+    public Inventory(String quantityLabel, double price, Instant updatedAt, Integer stockAvailable) {
         this.quantityLabel = quantityLabel;
-        this.price = new BigDecimal(new BigInteger(price), PRICE_SCALE);
+        this.price = BigDecimal.valueOf(price);
         this.updatedAt = updatedAt;
         this.stockAvailable = stockAvailable;
     }

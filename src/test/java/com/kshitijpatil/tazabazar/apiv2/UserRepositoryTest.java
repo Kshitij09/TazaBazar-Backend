@@ -50,8 +50,8 @@ public class UserRepositoryTest extends BaseRepositoryTest {
         var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
                 "Carrot",
                 AggregateReference.to(vegetables.label));
-        var inventory200gm = new Inventory("200gm", "15", Instant.now(), 100);
-        var inventory500gm = new Inventory("500gm", "25", Instant.now(), 100);
+        var inventory200gm = new Inventory("200gm", 15., Instant.now(), 100);
+        var inventory500gm = new Inventory("500gm", 25., Instant.now(), 100);
         carrot.addAll(inventory200gm, inventory500gm);
         template.insert(carrot);
     }
