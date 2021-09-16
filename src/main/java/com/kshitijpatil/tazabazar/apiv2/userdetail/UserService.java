@@ -32,7 +32,7 @@ public class UserService implements IUserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserView createUser(CreateUserRequest request) throws UsernameExistsException, PhoneExistsException, RoleNotFoundException {
+    public UserAuthView createUser(CreateUserRequest request) throws UsernameExistsException, PhoneExistsException, RoleNotFoundException {
         try {
             var userDetail = new User(request.username, request.fullName, request.phone);
             var userAuth = new UserAuth(AggregateReference.to(userDetail.username), request.password);
@@ -44,7 +44,7 @@ public class UserService implements IUserService, UserDetailsService {
             userAuth.setPassword(passwordEncoder.encode(userAuth.password));
             var savedDetails = template.insert(userDetail);
             template.insert(userAuth);
-            return UserMapper.toUserView(savedDetails, userAuth);
+            return UserMapper.toUserAuthView(savedDetails, userAuth);
         } catch (DbActionExecutionException exception) {
             if (exception.getCause() instanceof DuplicateKeyException) {
                 var causeMessage = exception.getCause().getMessage();
@@ -61,7 +61,7 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public void storeRefreshTokenFor(String username, String refreshToken) throws UsernameNotFoundException {
         var user = userAccounts.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> makeUsernameNotFoundException(username));
         user.setRefreshToken(refreshToken);
         userAccounts.save(user);
     }
@@ -69,9 +69,7 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var userAuth = userAccounts.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        String.format("User: %s, not found", username)
-                ));
+                .orElseThrow(() -> makeUsernameNotFoundException(username));
         var userRoles = userAuth.grantedAuthorities.stream()
                 .map(Authority::getAuthority)
                 .map(SimpleGrantedAuthority::new)
@@ -86,12 +84,22 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public UserView loadUserViewByUsername(String username) throws UsernameNotFoundException {
         var userAuth = userAccounts.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        String.format("User: %s, not found", username)
-                ));
+                .orElseThrow(() -> makeUsernameNotFoundException(username));
         // At this point, we can be sure that user exists (one-to-one mapping)
         var userDetails = users.findById(username).get();
         return UserMapper.toUserView(userDetails, userAuth);
+    }
+
+    private UsernameNotFoundException makeUsernameNotFoundException(String username) {
+        return new UsernameNotFoundException(
+                String.format("User: %s, not found", username)
+        );
+    }
+
+    @Override
+    public UserAuthView loadUserAuthViewByUsername(String username) throws UsernameNotFoundException {
+        return userAccounts.getUserAuthViewByUsername(username)
+                .orElseThrow(() -> makeUsernameNotFoundException(username));
     }
 
     @Override

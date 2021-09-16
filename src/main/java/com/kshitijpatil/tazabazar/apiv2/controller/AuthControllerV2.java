@@ -5,7 +5,7 @@ import com.kshitijpatil.tazabazar.api.security.dto.RefreshTokenResponse;
 import com.kshitijpatil.tazabazar.api.security.service.JwtCreateService;
 import com.kshitijpatil.tazabazar.apiv2.dto.CreateUserRequest;
 import com.kshitijpatil.tazabazar.apiv2.dto.LoginResponse;
-import com.kshitijpatil.tazabazar.apiv2.dto.UserView;
+import com.kshitijpatil.tazabazar.apiv2.userauth.UserAuthView;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,9 +44,9 @@ public class AuthControllerV2 {
             var refreshToken = jwtCreateService.generateRefreshToken();
             //var refreshToken = user.getUsername();
             userService.storeRefreshTokenFor(user.getUsername(), refreshToken);
-            var userView = userService.loadUserViewByUsername(user.getUsername());
+            var userAuthView = userService.loadUserAuthViewByUsername(user.getUsername());
             var loginResponse = LoginResponse.builder()
-                    .user(userView)
+                    .user(userAuthView)
                     .accessToken(jwtCreateService.generateToken(user.getUsername(), roles))
                     .refreshToken(refreshToken)
                     .authorities(new HashSet<>(roles))
@@ -59,7 +59,7 @@ public class AuthControllerV2 {
     }
 
     @PostMapping("register")
-    public UserView register(@RequestBody @Valid CreateUserRequest request) {
+    public UserAuthView register(@RequestBody @Valid CreateUserRequest request) {
         return userService.createUser(request);
     }
 
