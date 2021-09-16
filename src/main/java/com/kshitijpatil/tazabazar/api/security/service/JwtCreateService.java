@@ -1,8 +1,8 @@
 package com.kshitijpatil.tazabazar.api.security.service;
 
 import com.kshitijpatil.tazabazar.api.security.jwt.JwtPrivateKeyProvider;
-import com.kshitijpatil.tazabazar.api.utils.DateUtil;
 import com.kshitijpatil.tazabazar.configuration.JwtConfig;
+import com.kshitijpatil.tazabazar.utils.DateUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;

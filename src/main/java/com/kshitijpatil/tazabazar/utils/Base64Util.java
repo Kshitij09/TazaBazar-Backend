@@ -1,4 +1,4 @@
-package com.kshitijpatil.tazabazar.api.utils;
+package com.kshitijpatil.tazabazar.utils;
 
 import org.springframework.stereotype.Component;
 

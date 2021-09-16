@@ -1,6 +1,6 @@
 package com.kshitijpatil.tazabazar.api.product;
 
-import com.kshitijpatil.tazabazar.api.utils.MockDataFactory;
+import com.kshitijpatil.tazabazar.utils.MockDataFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

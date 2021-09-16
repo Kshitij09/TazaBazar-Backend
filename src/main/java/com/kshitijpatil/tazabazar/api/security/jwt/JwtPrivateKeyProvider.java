@@ -1,8 +1,8 @@
 package com.kshitijpatil.tazabazar.api.security.jwt;
 
-import com.kshitijpatil.tazabazar.api.utils.Base64Util;
-import com.kshitijpatil.tazabazar.api.utils.ReadKeyMixin;
-import com.kshitijpatil.tazabazar.api.utils.ResourceUtil;
+import com.kshitijpatil.tazabazar.utils.Base64Util;
+import com.kshitijpatil.tazabazar.utils.ReadKeyMixin;
+import com.kshitijpatil.tazabazar.utils.ResourceUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
