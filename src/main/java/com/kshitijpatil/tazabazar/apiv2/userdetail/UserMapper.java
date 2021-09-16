@@ -1,8 +1,8 @@
 package com.kshitijpatil.tazabazar.apiv2.userdetail;
 
+import com.kshitijpatil.tazabazar.apiv2.dto.UserAuthView;
 import com.kshitijpatil.tazabazar.apiv2.dto.UserView;
 import com.kshitijpatil.tazabazar.apiv2.userauth.UserAuth;
-import com.kshitijpatil.tazabazar.apiv2.userauth.UserAuthView;
 
 public class UserMapper {
     public static UserView toUserView(User user, UserAuth userAuth) {

@@ -1,7 +1,6 @@
 package com.kshitijpatil.tazabazar.apiv2.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.kshitijpatil.tazabazar.apiv2.userauth.UserAuthView;
 import lombok.Builder;
 import lombok.Data;
 

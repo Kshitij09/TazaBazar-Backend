@@ -1,5 +1,6 @@
 package com.kshitijpatil.tazabazar.apiv2.userauth;
 
+import com.kshitijpatil.tazabazar.apiv2.dto.UserAuthView;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

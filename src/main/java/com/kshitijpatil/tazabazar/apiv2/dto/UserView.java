@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Value;
 
 /**
- * @deprecated use {@link com.kshitijpatil.tazabazar.apiv2.userauth.UserAuthView} instead
+ * @deprecated use {@link UserAuthView} instead
  */
 @Value
 @Builder
