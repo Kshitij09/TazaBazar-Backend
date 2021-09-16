@@ -95,10 +95,21 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public UserView loadUserByRefreshToken(String refreshToken) throws RefreshTokenNotFoundException {
-        var userAuth = userAccounts.findByRefreshToken(refreshToken)
+    public UserDetails loadUserByRefreshToken(String refreshToken) throws RefreshTokenNotFoundException {
+        // TODO: Report this on spring-data-jdbc
+        // for some reason `userAccounts.findByRefreshToken(refreshToken)`
+        // is causing "relation authority does not exist" error
+        var username = userAccounts.findUsernameByRefreshToken(refreshToken)
                 .orElseThrow(RefreshTokenNotFoundException::new);
-        var user = users.findById(Objects.requireNonNull(userAuth.username.getId())).get();
-        return UserMapper.toUserView(user, userAuth);
+        var userAuth = userAccounts.findById(username).get();
+        var userRoles = userAuth.grantedAuthorities.stream()
+                .map(Authority::getAuthority)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(Objects.requireNonNull(userAuth.username.getId()))
+                .password(userAuth.password)
+                .authorities(userRoles)
+                .build();
     }
 }

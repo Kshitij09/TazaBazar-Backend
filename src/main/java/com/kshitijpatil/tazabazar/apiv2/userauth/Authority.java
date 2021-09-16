@@ -6,7 +6,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 
 @Value
-@Table("authorized")
+@Table("grants")
 public class Authority implements GrantedAuthority {
     public AggregateReference<Role, String> role;
 

@@ -3,10 +3,17 @@ package com.kshitijpatil.tazabazar.apiv2;
 import com.kshitijpatil.tazabazar.apiv2.userauth.*;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.User;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.UserRepository;
+import com.kshitijpatil.tazabazar.util.TestPostgreConfig;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
@@ -14,7 +21,12 @@ import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-public class UserAuthRepositoryTest extends BaseRepositoryTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = TestPostgreConfig.class)
+@EnableJdbcRepositories
+@Sql("classpath:schema.sql")
+@ActiveProfiles("test")
+public class UserAuthRepositoryTest {
     private final User user1 = new User("johndoe@test.com",
             "John Doe",
             "+919090909090");
@@ -52,5 +64,23 @@ public class UserAuthRepositoryTest extends BaseRepositoryTest {
                 .map(Role::getName)
                 .collect(Collectors.toList());
         assertThat(reloadedAuthorities).containsAll(grantedAuthorities);
+    }
+
+    @Test
+    @Transactional
+    public void testFindByRefreshToken() {
+        var userDetails = template.insert(user1);
+        var userAuth = new UserAuth(AggregateReference.to(userDetails.username), "1234");
+        Role userRole = new Role(Role.ROLE_USER), adminRole = new Role(Role.ROLE_ADMIN);
+        var userAuthority = new Authority(AggregateReference.to(template.insert(userRole).name));
+        var adminAuthority = new Authority(AggregateReference.to(template.insert(adminRole).name));
+        userAuth.grantedAuthorities.add(userAuthority);
+        userAuth.grantedAuthorities.add(adminAuthority);
+        template.insert(userAuth);
+        userAuth.refreshToken = "asugksabgs";
+        userAccounts.save(userAuth);
+        var reloaded = userAccounts.findByRefreshToken(userAuth.refreshToken);
+        assertThat(reloaded).isNotEmpty();
+        assertThat(reloaded.get()).isEqualTo(userAuth);
     }
 }

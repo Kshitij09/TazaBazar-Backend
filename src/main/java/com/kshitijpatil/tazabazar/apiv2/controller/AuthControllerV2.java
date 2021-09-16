@@ -1,6 +1,7 @@
 package com.kshitijpatil.tazabazar.apiv2.controller;
 
 import com.kshitijpatil.tazabazar.api.security.dto.AuthRequest;
+import com.kshitijpatil.tazabazar.api.security.dto.RefreshTokenResponse;
 import com.kshitijpatil.tazabazar.api.security.service.JwtCreateService;
 import com.kshitijpatil.tazabazar.apiv2.dto.CreateUserRequest;
 import com.kshitijpatil.tazabazar.apiv2.dto.LoginResponse;
@@ -15,10 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashSet;
@@ -44,6 +42,7 @@ public class AuthControllerV2 {
                     .stream().map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
             var refreshToken = jwtCreateService.generateRefreshToken();
+            //var refreshToken = user.getUsername();
             userService.storeRefreshTokenFor(user.getUsername(), refreshToken);
             var userView = userService.loadUserViewByUsername(user.getUsername());
             var loginResponse = LoginResponse.builder()
@@ -62,5 +61,15 @@ public class AuthControllerV2 {
     @PostMapping("register")
     public UserView register(@RequestBody @Valid CreateUserRequest request) {
         return userService.createUser(request);
+    }
+
+    @GetMapping("token")
+    public RefreshTokenResponse refreshToken(@RequestHeader("refresh-token") String token) {
+        var user = userService.loadUserByRefreshToken(token);
+        var roles = user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        var accessToken = jwtCreateService.generateToken(user.getUsername(), roles);
+        return new RefreshTokenResponse(accessToken);
     }
 }
