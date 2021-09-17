@@ -58,7 +58,7 @@ public class MockDataFactory {
      * given threshold, 0 is returned.
      */
     public static int getRandomStock(int bound, int notAvailableThreshold) {
-        var isAvailableProbability = MockDataFactory.getRandomInt(100) + 1;
-        return isAvailableProbability > notAvailableThreshold ? MockDataFactory.getRandomInt(bound) + 1 : 0;
+        var isAvailableProbability = getRandomInt(100) + 1;
+        return isAvailableProbability < notAvailableThreshold ? getRandomInt(bound) + 1 : 0;
     }
 }

@@ -62,6 +62,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/v2/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/products").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v2/products/**").permitAll()
                 // Static Content
                 .antMatchers(HttpMethod.GET, "/content/**").permitAll()
                 .antMatchers(format("%s/**", restApiDocPath)).permitAll()
