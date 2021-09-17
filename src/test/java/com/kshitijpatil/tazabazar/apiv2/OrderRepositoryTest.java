@@ -17,6 +17,7 @@ import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -63,7 +64,7 @@ public class OrderRepositoryTest {
 
 
     @Test
-    //@Transactional
+    @Transactional
     public void testCreateOrder() {
         User user1 = new User("johndoe@test.com",
                 "John Doe",
