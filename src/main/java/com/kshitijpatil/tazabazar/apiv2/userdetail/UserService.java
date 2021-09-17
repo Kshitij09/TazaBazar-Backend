@@ -6,6 +6,7 @@ import com.kshitijpatil.tazabazar.apiv2.dto.UserView;
 import com.kshitijpatil.tazabazar.apiv2.userauth.*;
 import com.kshitijpatil.tazabazar.security.jwt.RefreshTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.IterableUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
@@ -18,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -101,6 +103,11 @@ public class UserService implements IUserService, UserDetailsService {
     public UserAuthView loadUserAuthViewByUsername(String username) throws UsernameNotFoundException {
         return userAccounts.getUserAuthViewByUsername(username)
                 .orElseThrow(() -> makeUsernameNotFoundException(username));
+    }
+
+    @Override
+    public List<UserAuthView> loadAllUsers() {
+        return IterableUtils.toList(userAccounts.findAllUserAuthViews());
     }
 
     @Override

@@ -8,6 +8,8 @@ import com.kshitijpatil.tazabazar.security.jwt.RefreshTokenNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.List;
+
 public interface IUserService {
     UserAuthView createUser(CreateUserRequest user) throws UsernameExistsException, PhoneExistsException;
 
@@ -16,6 +18,8 @@ public interface IUserService {
     UserView loadUserViewByUsername(String username) throws UsernameNotFoundException;
 
     UserAuthView loadUserAuthViewByUsername(String username) throws UsernameNotFoundException;
+
+    List<UserAuthView> loadAllUsers();
 
     UserDetails loadUserByRefreshToken(String refreshToken) throws RefreshTokenNotFoundException;
 

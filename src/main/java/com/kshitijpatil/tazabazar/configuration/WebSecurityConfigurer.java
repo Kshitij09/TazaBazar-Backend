@@ -1,5 +1,6 @@
 package com.kshitijpatil.tazabazar.configuration;
 
+import com.kshitijpatil.tazabazar.apiv2.userauth.Role;
 import com.kshitijpatil.tazabazar.security.jwt.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -67,6 +68,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/content/**").permitAll()
                 .antMatchers(format("%s/**", restApiDocPath)).permitAll()
                 .antMatchers(format("%s/**", swaggerPath)).permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v2/users").hasAuthority(Role.ROLE_ADMIN)
                 .anyRequest().authenticated();
 
         // Add JWT token filter
