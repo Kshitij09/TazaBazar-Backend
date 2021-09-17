@@ -26,9 +26,4 @@ public class ProductControllerV2 {
             return productService.getProductsByCategory(category);
         }
     }
-
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello World";
-    }
 }
