@@ -26,6 +26,11 @@ public class ApiExceptionHandler {
         return getResponseEntityFor(ex, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(com.kshitijpatil.tazabazar.apiv2.product.ProductNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleApiException(com.kshitijpatil.tazabazar.apiv2.product.ProductNotFoundException ex) {
+        return getResponseEntityFor(ex, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(InventoryNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleApiException(InventoryNotFoundException ex) {
         return getResponseEntityFor(ex, HttpStatus.NOT_FOUND);

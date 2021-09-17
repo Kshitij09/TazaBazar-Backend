@@ -55,4 +55,11 @@ public class ProductService implements IProductService {
         products.deleteAll();
         productCategories.deleteAll();
     }
+
+    @Override
+    public ProductOutDto getProductBySku(String productSku) throws ProductNotFoundException {
+        return products.findById(productSku)
+                .map(ProductMapper::toProductOutDto)
+                .orElseThrow(() -> new ProductNotFoundException(productSku));
+    }
 }

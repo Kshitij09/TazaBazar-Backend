@@ -17,4 +17,6 @@ public interface IProductService {
     List<ProductCategoryDto> getAllCategories();
 
     void clearAll();
+
+    ProductOutDto getProductBySku(String productSku) throws ProductNotFoundException;
 }

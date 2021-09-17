@@ -5,10 +5,7 @@ import com.kshitijpatil.tazabazar.apiv2.dto.ProductOutDto;
 import com.kshitijpatil.tazabazar.apiv2.product.IProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +28,10 @@ public class ProductControllerV2 {
     @GetMapping("categories")
     public List<ProductCategoryDto> getProductCategories() {
         return productService.getAllCategories();
+    }
+
+    @GetMapping("{product_sku}")
+    public ProductOutDto getProductBySku(@PathVariable("product_sku") String productSku) {
+        return productService.getProductBySku(productSku);
     }
 }
