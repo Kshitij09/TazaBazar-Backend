@@ -45,12 +45,12 @@ public class AuthControllerV2 {
             //var refreshToken = user.getUsername();
             userService.storeRefreshTokenFor(user.getUsername(), refreshToken);
             var userAuthView = userService.loadUserAuthViewByUsername(user.getUsername());
-            var loginResponse = LoginResponse.builder()
-                    .user(userAuthView)
-                    .accessToken(jwtCreateService.generateToken(user.getUsername(), roles))
-                    .refreshToken(refreshToken)
-                    .authorities(new HashSet<>(roles))
-                    .build();
+            var loginResponse = new LoginResponse(
+                    userAuthView,
+                    jwtCreateService.generateToken(user.getUsername(), roles),
+                    refreshToken,
+                    new HashSet<>(roles)
+            );
             return ResponseEntity.ok()
                     .body(loginResponse);
         } catch (BadCredentialsException ex) {

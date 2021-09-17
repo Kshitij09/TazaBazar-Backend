@@ -7,7 +7,7 @@ import lombok.NonNull;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -33,7 +33,11 @@ public class CreateUserRequest {
         this.username = username;
         this.password = password;
         this.phone = phone;
-        this.authorities = Collections.emptySet();
+        this.authorities = new HashSet<>();
         this.fullName = null;
+    }
+
+    public void addAuthority(String authority) {
+        authorities.add(authority);
     }
 }
