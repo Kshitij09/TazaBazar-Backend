@@ -1,6 +1,7 @@
-package com.kshitijpatil.tazabazar.api.product;
+package com.kshitijpatil.tazabazar.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kshitijpatil.tazabazar.api.product.ProductInDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductCategoryDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

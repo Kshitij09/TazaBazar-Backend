@@ -1,11 +1,11 @@
 package com.kshitijpatil.tazabazar.apiv2.initializer;
 
-import com.kshitijpatil.tazabazar.api.product.JsonDataSource;
 import com.kshitijpatil.tazabazar.api.product.ProductInDto;
 import com.kshitijpatil.tazabazar.apiv2.product.IProductService;
 import com.kshitijpatil.tazabazar.apiv2.product.Inventory;
 import com.kshitijpatil.tazabazar.apiv2.product.Product;
 import com.kshitijpatil.tazabazar.apiv2.product.ProductCategory;
+import com.kshitijpatil.tazabazar.utils.JsonDataSource;
 import com.kshitijpatil.tazabazar.utils.MockDataFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

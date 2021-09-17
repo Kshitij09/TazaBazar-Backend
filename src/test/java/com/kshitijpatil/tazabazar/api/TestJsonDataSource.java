@@ -1,7 +1,7 @@
 package com.kshitijpatil.tazabazar.api;
 
-import com.kshitijpatil.tazabazar.api.product.JsonDataSource;
 import com.kshitijpatil.tazabazar.api.product.ProductInDto;
+import com.kshitijpatil.tazabazar.utils.JsonDataSource;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
