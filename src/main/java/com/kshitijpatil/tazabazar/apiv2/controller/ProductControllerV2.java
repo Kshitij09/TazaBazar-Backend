@@ -1,5 +1,6 @@
 package com.kshitijpatil.tazabazar.apiv2.controller;
 
+import com.kshitijpatil.tazabazar.apiv2.dto.ProductCategoryDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductOutDto;
 import com.kshitijpatil.tazabazar.apiv2.product.IProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,5 +26,10 @@ public class ProductControllerV2 {
         } else {
             return productService.getProductsByCategory(category);
         }
+    }
+
+    @GetMapping("categories")
+    public List<ProductCategoryDto> getProductCategories() {
+        return productService.getAllCategories();
     }
 }

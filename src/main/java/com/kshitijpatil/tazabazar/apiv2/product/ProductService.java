@@ -1,5 +1,6 @@
 package com.kshitijpatil.tazabazar.apiv2.product;
 
+import com.kshitijpatil.tazabazar.apiv2.dto.ProductCategoryDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductOutDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
@@ -40,6 +41,13 @@ public class ProductService implements IProductService {
     @Override
     public ProductCategory saveProductCategory(ProductCategory productCategory) {
         return aggregateTemplate.insert(productCategory);
+    }
+
+    @Override
+    public List<ProductCategoryDto> getAllCategories() {
+        return StreamSupport.stream(productCategories.findAll().spliterator(), false)
+                .map(category -> new ProductCategoryDto(category.label, category.name, category.skuPrefix))
+                .collect(Collectors.toList());
     }
 
     @Override
