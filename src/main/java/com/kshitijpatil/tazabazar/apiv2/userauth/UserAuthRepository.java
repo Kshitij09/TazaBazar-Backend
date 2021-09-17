@@ -8,8 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface UserAuthRepository extends CrudRepository<UserAuth, String> {
-    @Query("SELECT * FROM user_auth WHERE refresh_token=:refreshToken")
-    Optional<UserAuth> findByRefreshToken(@Param("refreshToken") String refreshToken);
+    Optional<UserAuth> findByRefreshToken(String refreshToken);
 
     @Query("SELECT username FROM user_auth WHERE refresh_token=:refreshToken")
     Optional<String> findUsernameByRefreshToken(@Param("refreshToken") String refreshToken);
