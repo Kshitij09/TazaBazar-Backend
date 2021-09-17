@@ -1,7 +1,7 @@
 package com.kshitijpatil.tazabazar.apiv2;
 
+import com.kshitijpatil.tazabazar.TestApplication;
 import com.kshitijpatil.tazabazar.apiv2.product.*;
-import com.kshitijpatil.tazabazar.util.TestPostgreConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TestPostgreConfig.class)
+@SpringBootTest(classes = TestApplication.class)
 @EnableJdbcRepositories
-@Sql("classpath:schema.sql")
 @ActiveProfiles("test")
 public class ProductRepositoryTest {
     @Autowired
@@ -64,6 +62,27 @@ public class ProductRepositoryTest {
 
     @Test
     @Transactional
+    public void testFindProductsByCategory() {
+        var vegetables = insertVegetablesCategory();
+        var fruits = template.insert(
+                new ProductCategory("fruits", "fru", "Fruits")
+        );
+        var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
+                "Carrot",
+                AggregateReference.to(vegetables.label));
+        var sitafal = new Product(String.format("%s-001", fruits.skuPrefix),
+                "Sitagal",
+                AggregateReference.to(fruits.label));
+        template.insert(carrot);
+        template.insert(sitafal);
+        var reloaded = products.findByCategory(vegetables.label);
+        assertThat(reloaded).containsOnly(carrot);
+        reloaded = products.findByCategory(fruits.label);
+        assertThat(reloaded).containsOnly(sitafal);
+    }
+
+    @Test
+    @Transactional
     public void testSaveInventory() {
         var vegetables = insertVegetablesCategory();
         var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
@@ -92,8 +111,8 @@ public class ProductRepositoryTest {
         carrot.addAll(inventory200gm, inventory500gm);
         template.insert(carrot);
         var reloaded = inventories.findAllById(
-                Arrays.asList(new InventoryId(1L, carrot.sku),
-                        new InventoryId(2L, carrot.sku))
+                Arrays.asList(new InventoryId(inventory200gm.id, carrot.sku),
+                        new InventoryId(inventory500gm.id, carrot.sku))
         );
         assertThat(reloaded).isNotEmpty();
     }
