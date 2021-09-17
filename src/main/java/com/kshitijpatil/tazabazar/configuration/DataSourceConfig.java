@@ -1,6 +1,6 @@
 package com.kshitijpatil.tazabazar.configuration;
 
-import com.zaxxer.hikari.HikariDataSource;
+/*import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -63,4 +63,4 @@ public class DataSourceConfig extends AbstractJdbcConfiguration {
         }
         return dataSource;
     }
-}
+}*/
