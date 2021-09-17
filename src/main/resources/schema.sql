@@ -1,4 +1,3 @@
-set search_path = public;
 drop table if exists order_line;
 drop table if exists purchase_order;
 drop table if exists cart_item;
