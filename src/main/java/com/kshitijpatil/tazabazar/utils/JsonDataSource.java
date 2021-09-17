@@ -12,7 +12,6 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,30 +35,6 @@ public class JsonDataSource {
     @Value("classpath:json/users.json")
     String usersFilepath;
 
-    private List<ProductInDto> readProductsFrom(String filepath) {
-        try {
-            File file = ResourceUtils.getFile(filepath);
-            ProductInDto[] fruits = mapper.readValue(file, ProductInDto[].class);
-            logger.debug("Read " + fruits.length + " objects from " + filepath);
-            return Arrays.asList(fruits);
-        } catch (IOException e) {
-            logger.error("Failed to read from " + filepath, e);
-            return Collections.emptyList();
-        }
-    }
-
-    public List<ProductCategoryDto> getProductCategories() {
-        try {
-            File file = ResourceUtils.getFile(productCategoriesFilepath);
-            ProductCategoryDto[] categories = mapper.readValue(file, ProductCategoryDto[].class);
-            logger.debug("Read " + categories.length + " objects from " + productCategoriesFilepath);
-            return Arrays.asList(categories);
-        } catch (IOException e) {
-            logger.error("Failed to read from " + productCategoriesFilepath, e);
-            return Collections.emptyList();
-        }
-    }
-
     private <T> List<T> readJsonArrayFrom(String filepath, Class<T> valueType) {
         try {
             File file = ResourceUtils.getFile(filepath);
@@ -72,6 +47,14 @@ public class JsonDataSource {
             logger.error("Failed to read from " + filepath, e);
             return Collections.emptyList();
         }
+    }
+
+    private List<ProductInDto> readProductsFrom(String filepath) {
+        return readJsonArrayFrom(filepath, ProductInDto.class);
+    }
+
+    public List<ProductCategoryDto> getProductCategories() {
+        return readJsonArrayFrom(productCategoriesFilepath, ProductCategoryDto.class);
     }
 
     public List<CreateUserRequest> getUserAccounts() {
