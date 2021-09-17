@@ -1,11 +1,14 @@
 package com.kshitijpatil.tazabazar;
 
 import com.kshitijpatil.tazabazar.apiv2.initializer.ProductInitializer;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-@SpringBootApplication
-public class TestApplication {
+/**
+ * Use this context if you want to exclude initializers
+ */
+@TestConfiguration
+public class TestContext {
     @MockBean
     private ProductInitializer productInitializer;
 }

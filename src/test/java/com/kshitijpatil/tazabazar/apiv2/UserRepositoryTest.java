@@ -1,5 +1,6 @@
 package com.kshitijpatil.tazabazar.apiv2;
 
+import com.kshitijpatil.tazabazar.TestContext;
 import com.kshitijpatil.tazabazar.apiv2.product.Inventory;
 import com.kshitijpatil.tazabazar.apiv2.product.InventoryRepository;
 import com.kshitijpatil.tazabazar.apiv2.product.Product;
@@ -8,11 +9,16 @@ import com.kshitijpatil.tazabazar.apiv2.userdetail.User;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.UserRepository;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
+import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.data.relational.core.conversion.DbActionExecutionException;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
@@ -20,7 +26,11 @@ import java.time.Instant;
 import static com.kshitijpatil.tazabazar.apiv2.TestUtils.assertNotEmptyAndGet;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserRepositoryTest extends BaseRepositoryTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = TestContext.class)
+@EnableJdbcRepositories
+@ActiveProfiles("test")
+public class UserRepositoryTest {
     @Autowired
     JdbcAggregateTemplate template;
     @Autowired

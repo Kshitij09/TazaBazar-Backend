@@ -1,9 +1,10 @@
 package com.kshitijpatil.tazabazar.apiv2;
 
+import com.kshitijpatil.tazabazar.TestContext;
 import com.kshitijpatil.tazabazar.apiv2.userauth.*;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.User;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.UserRepository;
-import com.kshitijpatil.tazabazar.util.TestPostgreConfig;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +22,8 @@ import java.util.stream.StreamSupport;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TestPostgreConfig.class)
+@SpringBootTest(classes = TestContext.class)
 @EnableJdbcRepositories
-@Sql("classpath:schema.sql")
 @ActiveProfiles("test")
 public class UserAuthRepositoryTest {
     private final User user1 = new User("johndoe@test.com",

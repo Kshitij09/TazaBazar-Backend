@@ -1,6 +1,6 @@
 package com.kshitijpatil.tazabazar.apiv2;
 
-import com.kshitijpatil.tazabazar.TestApplication;
+import com.kshitijpatil.tazabazar.TestContext;
 import com.kshitijpatil.tazabazar.apiv2.product.*;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = TestApplication.class)
+@SpringBootTest(classes = TestContext.class)
 @EnableJdbcRepositories
 @ActiveProfiles("test")
 public class ProductRepositoryTest {
