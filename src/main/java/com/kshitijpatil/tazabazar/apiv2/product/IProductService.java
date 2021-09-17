@@ -3,6 +3,7 @@ package com.kshitijpatil.tazabazar.apiv2.product;
 import com.kshitijpatil.tazabazar.apiv2.dto.InventoryOutDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductCategoryDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductOutDto;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -22,4 +23,8 @@ public interface IProductService {
     ProductOutDto getProductBySku(String productSku) throws ProductNotFoundException;
 
     List<InventoryOutDto> getProductInventoriesBySku(String productSku) throws ProductNotFoundException;
+
+    List<ProductOutDto> searchProductByName(String query);
+
+    List<ProductOutDto> getProductsByCategoryAndName(@Nullable String category, @Nullable String nameQuery);
 }

@@ -18,12 +18,9 @@ public class ProductControllerV2 {
     private final IProductService productService;
 
     @GetMapping
-    public List<ProductOutDto> getProducts(@RequestParam(value = "category", required = false) String category) {
-        if (category == null) {
-            return productService.getAllProducts();
-        } else {
-            return productService.getProductsByCategory(category);
-        }
+    public List<ProductOutDto> getProducts(@RequestParam(value = "category", required = false) String category,
+                                           @RequestParam(value = "q", required = false) String query) {
+        return productService.getProductsByCategoryAndName(category, query);
     }
 
     @GetMapping("categories")

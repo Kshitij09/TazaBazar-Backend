@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -43,9 +44,21 @@ public class ProductControllerTest {
     @Autowired
     private ProductRepository products;
 
+    private String getRequestUri(@Nullable String category, @Nullable String nameQuery) {
+        var requestUri = "/api/v2/products";
+        if (category != null && nameQuery != null)
+            requestUri += String.format("?category=%s&q=%s", category, nameQuery);
+        else if (nameQuery != null)
+            requestUri += String.format("?q=%s", nameQuery);
+        else if (category != null)
+            requestUri += String.format("?category=%s", category);
+        return requestUri;
+    }
+
     @Test
-    public void testGetProducts() throws Exception {
-        var result = mockMvc.perform(get("/api/v2/products"))
+    public void testGetAllProducts() throws Exception {
+        var noFilters = get(getRequestUri(null, null));
+        var result = mockMvc.perform(noFilters)
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -55,7 +68,12 @@ public class ProductControllerTest {
                 }
         );
         assertThat(actual).isNotEmpty();
-        var vegetablesResult = mockMvc.perform(get("/api/v2/products?category=vegetables"))
+    }
+
+    @Test
+    public void testGetProductsByCategory() throws Exception {
+        var filterByVegetables = get(getRequestUri("vegetables", null));
+        var vegetablesResult = mockMvc.perform(filterByVegetables)
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
@@ -65,6 +83,44 @@ public class ProductControllerTest {
                 }
         );
         vegetablesActual.forEach(vegetable -> assertThat(vegetable.category).isEqualTo("vegetables"));
+    }
+
+    @Test
+    public void testGetProductsByName() throws Exception {
+        var expected = products.searchProductByName("dal")
+                .stream().map(ProductMapper::toProductOutDto)
+                .collect(Collectors.toList());
+        var filterByName = get(getRequestUri(null, "dal"));
+        var queryResult = mockMvc.perform(filterByName)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        List<ProductOutDto> actual = mapper.readValue(
+                queryResult.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                }
+        );
+        assertThat(actual).containsAll(expected);
+    }
+
+    @Test
+    public void testGetProductsByCategoryAndName() throws Exception {
+        var searchCategory = "dals-and-pulses";
+        var searchQuery = "moong";
+        var expected = products.searchProductByCategoryAndName(searchCategory, searchQuery)
+                .stream().map(ProductMapper::toProductOutDto)
+                .collect(Collectors.toList());
+        var filterByCategoryAndName = get(getRequestUri(searchCategory, searchQuery));
+        var queryResult = mockMvc.perform(filterByCategoryAndName)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        List<ProductOutDto> actual = mapper.readValue(
+                queryResult.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                }
+        );
+        assertThat(actual).containsAll(expected);
     }
 
     @Test

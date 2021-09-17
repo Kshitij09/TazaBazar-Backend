@@ -5,6 +5,7 @@ import com.kshitijpatil.tazabazar.apiv2.dto.ProductCategoryDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductOutDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,5 +72,24 @@ public class ProductService implements IProductService {
         return StreamSupport.stream(inventories.findAllBySku(productSku).spliterator(), false)
                 .map(ProductMapper::toInventoryOutDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductOutDto> searchProductByName(String query) {
+        return toProductOutDtoList(products.searchProductByName(query));
+    }
+
+    @Override
+    public List<ProductOutDto> getProductsByCategoryAndName(@Nullable String category, @Nullable String nameQuery) {
+        Iterable<Product> queryResults;
+        if (category != null && nameQuery != null)
+            queryResults = products.searchProductByCategoryAndName(category, nameQuery);
+        else if (category == null && nameQuery == null)
+            queryResults = products.findAll();
+        else if (nameQuery == null)
+            queryResults = products.findByCategory(category);
+        else
+            queryResults = products.searchProductByName(nameQuery);
+        return toProductOutDtoList(queryResults);
     }
 }
