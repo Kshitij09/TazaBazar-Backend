@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.kshitijpatil.tazabazar.ApiServerApplication;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductOutDto;
+import com.kshitijpatil.tazabazar.apiv2.product.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,11 @@ public class ProductControllerTest {
             .build();
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ProductRepository products;
 
     @Test
-    public void getProductsWorks() throws Exception {
+    public void testGetProducts() throws Exception {
         var result = mockMvc.perform(get("/api/v2/products"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -43,5 +46,15 @@ public class ProductControllerTest {
                 }
         );
         assertThat(actual).isNotEmpty();
+        var vegetablesResult = mockMvc.perform(get("/api/v2/products?category=vegetables"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        List<ProductOutDto> vegetablesActual = mapper.readValue(
+                vegetablesResult.getResponse().getContentAsString(),
+                new TypeReference<>() {
+                }
+        );
+        vegetablesActual.forEach(vegetable -> assertThat(vegetable.category).isEqualTo("vegetables"));
     }
 }
