@@ -1,8 +1,9 @@
 package com.kshitijpatil.tazabazar.apiv2.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.Value;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -10,7 +11,8 @@ import java.util.Collections;
 import java.util.Set;
 
 
-@Value
+@Data
+@NoArgsConstructor
 public class CreateUserRequest {
     @NotBlank
     @NonNull
@@ -25,6 +27,7 @@ public class CreateUserRequest {
     @NonNull
     public String phone;
     public Set<String> authorities;
+
 
     public CreateUserRequest(@NonNull String username, @NonNull String password, @NonNull String phone) {
         this.username = username;

@@ -16,12 +16,12 @@ public class UserMapper {
     }
 
     public static UserAuthView toUserAuthView(User user, UserAuth userAuth) {
-        return UserAuthView.builder()
-                .username(user.username)
-                .fullName(user.fullName)
-                .phone(user.phone)
-                .emailVerified(userAuth.emailVerified)
-                .phoneVerified(userAuth.phoneVerified)
-                .build();
+        return new UserAuthView(
+                user.username,
+                user.fullName,
+                user.phone,
+                userAuth.emailVerified,
+                userAuth.phoneVerified
+        );
     }
 }
