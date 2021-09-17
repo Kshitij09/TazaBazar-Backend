@@ -2,6 +2,7 @@ package com.kshitijpatil.tazabazar.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kshitijpatil.tazabazar.api.product.ProductInDto;
+import com.kshitijpatil.tazabazar.apiv2.dto.CreateUserRequest;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductCategoryDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -32,6 +33,8 @@ public class JsonDataSource {
     String riceWheatAttaFilepath;
     @Value("classpath:json/product_categories.json")
     String productCategoriesFilepath;
+    @Value("classpath:json/users.json")
+    String usersFilepath;
 
     private List<ProductInDto> readProductsFrom(String filepath) {
         try {
@@ -55,6 +58,24 @@ public class JsonDataSource {
             logger.error("Failed to read from " + productCategoriesFilepath, e);
             return Collections.emptyList();
         }
+    }
+
+    private <T> List<T> readJsonArrayFrom(String filepath, Class<T> valueType) {
+        try {
+            File file = ResourceUtils.getFile(filepath);
+            var javaType = mapper.getTypeFactory()
+                    .constructCollectionType(List.class, valueType);
+            List<T> objects = mapper.readValue(file, javaType);
+            logger.debug("Read " + objects.size() + " objects from " + productCategoriesFilepath);
+            return objects;
+        } catch (IOException e) {
+            logger.error("Failed to read from " + filepath, e);
+            return Collections.emptyList();
+        }
+    }
+
+    public List<CreateUserRequest> getUserAccounts() {
+        return readJsonArrayFrom(usersFilepath, CreateUserRequest.class);
     }
 
     public List<ProductInDto> getFruits() {

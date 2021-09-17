@@ -1,0 +1,29 @@
+[
+  {
+    "username": "john.doe@test.com",
+    "password": "1234",
+    "phone": "1234567890",
+    "authorities": [
+      "ROLE_USER"
+    ],
+    "full_name": "John Doe"
+  },
+  {
+    "username": "ashok.kumar@test.com",
+    "password": "0000",
+    "phone": "8079621908",
+    "authorities": [
+      "ROLE_ADMIN"
+    ],
+    "full_name": "Ashok Kumar"
+  },
+  {
+    "username": "john.smith@test.com",
+    "password": "9876",
+    "phone": "7890673478",
+    "authorities": [
+      "ROLE_VENDOR"
+    ],
+    "full_name": "John Smith"
+  }
+]

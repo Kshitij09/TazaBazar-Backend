@@ -1,6 +1,7 @@
 package com.kshitijpatil.tazabazar;
 
 import com.kshitijpatil.tazabazar.apiv2.initializer.ProductInitializer;
+import com.kshitijpatil.tazabazar.apiv2.initializer.UserInitializer;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -11,4 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 public class TestContext {
     @MockBean
     private ProductInitializer productInitializer;
+    @MockBean
+    private UserInitializer userInitializer;
 }
