@@ -71,10 +71,32 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetUserByUsername() throws Exception {
-        var results = mockMvc.perform(get("/api/v2/users/john.doe@test.com"))
+    public void getUserByUsernameWithoutAuthorizationShouldReturn401() throws Exception {
+        mockMvc.perform(get("/api/v2/users/john.doe@test.com"))
                 .andDo(print())
                 .andExpect(status().is(UNAUTHORIZED.value()))
                 .andReturn();
+        // Trying to access someone else's profile
+        var loginResponse = performLogin("john.doe@test.com", "1234");
+        var authenticatedRequest = get("/api/v2/users/john.smith@test.com")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getAccessToken());
+        mockMvc.perform(authenticatedRequest)
+                .andDo(print())
+                .andExpect(status().is(UNAUTHORIZED.value()));
+    }
+
+    @Test
+    public void getUserByUsernameWithAuthorizationShouldSucceed() throws Exception {
+        mockMvc.perform(get("/api/v2/users/john.doe@test.com"))
+                .andDo(print())
+                .andExpect(status().is(UNAUTHORIZED.value()))
+                .andReturn();
+        // Trying to access someone else's profile
+        var loginResponse = performLogin("john.doe@test.com", "1234");
+        var authenticatedRequest = get("/api/v2/users/john.doe@test.com")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getAccessToken());
+        mockMvc.perform(authenticatedRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

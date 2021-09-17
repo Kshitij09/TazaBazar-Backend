@@ -69,6 +69,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers(format("%s/**", restApiDocPath)).permitAll()
                 .antMatchers(format("%s/**", swaggerPath)).permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v2/users").hasAuthority(Role.ROLE_ADMIN)
+                .antMatchers("/api/v2/users/**").authenticated()
                 .anyRequest().authenticated();
 
         // Add JWT token filter
