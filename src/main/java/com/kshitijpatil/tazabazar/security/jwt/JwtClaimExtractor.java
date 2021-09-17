@@ -18,7 +18,6 @@ public class JwtClaimExtractor {
     }
 
     public List<String> getRoles() {
-        var roles = (String[]) claims.get(CLAIM_ROLES);
-        return List.of(roles);
+        return claims.get(CLAIM_ROLES, List.class);
     }
 }
