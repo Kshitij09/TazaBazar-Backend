@@ -38,6 +38,11 @@ public class UserAuthRepositoryTest {
     @Autowired
     RoleRepository roles;
 
+    @BeforeEach
+    public void setup() {
+        roles.deleteAll();
+    }
+
     @Test
     @Transactional
     public void testCreateRole() {
