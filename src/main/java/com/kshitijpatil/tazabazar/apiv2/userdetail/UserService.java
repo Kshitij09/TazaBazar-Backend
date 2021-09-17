@@ -117,4 +117,16 @@ public class UserService implements IUserService, UserDetailsService {
                 .authorities(userRoles)
                 .build();
     }
+
+    @Override
+    public Role addRole(Role role) {
+        return template.insert(role);
+    }
+
+    @Override
+    public void clearAll() {
+        roles.deleteAll();
+        userAccounts.deleteAll();
+        users.deleteAll();
+    }
 }

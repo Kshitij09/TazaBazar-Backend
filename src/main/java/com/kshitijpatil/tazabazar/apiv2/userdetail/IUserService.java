@@ -3,6 +3,7 @@ package com.kshitijpatil.tazabazar.apiv2.userdetail;
 import com.kshitijpatil.tazabazar.apiv2.dto.CreateUserRequest;
 import com.kshitijpatil.tazabazar.apiv2.dto.UserAuthView;
 import com.kshitijpatil.tazabazar.apiv2.dto.UserView;
+import com.kshitijpatil.tazabazar.apiv2.userauth.Role;
 import com.kshitijpatil.tazabazar.security.jwt.RefreshTokenNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,4 +18,8 @@ public interface IUserService {
     UserAuthView loadUserAuthViewByUsername(String username) throws UsernameNotFoundException;
 
     UserDetails loadUserByRefreshToken(String refreshToken) throws RefreshTokenNotFoundException;
+
+    Role addRole(Role role);
+
+    void clearAll();
 }
