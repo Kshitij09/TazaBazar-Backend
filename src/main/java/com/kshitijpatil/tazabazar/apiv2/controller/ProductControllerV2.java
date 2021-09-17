@@ -1,5 +1,6 @@
 package com.kshitijpatil.tazabazar.apiv2.controller;
 
+import com.kshitijpatil.tazabazar.apiv2.dto.InventoryOutDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductCategoryDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductOutDto;
 import com.kshitijpatil.tazabazar.apiv2.product.IProductService;
@@ -33,5 +34,10 @@ public class ProductControllerV2 {
     @GetMapping("{product_sku}")
     public ProductOutDto getProductBySku(@PathVariable("product_sku") String productSku) {
         return productService.getProductBySku(productSku);
+    }
+
+    @GetMapping("{product_sku}/inventories")
+    public List<InventoryOutDto> getProductInventories(@PathVariable("product_sku") String productSku) {
+        return productService.getProductInventoriesBySku(productSku);
     }
 }

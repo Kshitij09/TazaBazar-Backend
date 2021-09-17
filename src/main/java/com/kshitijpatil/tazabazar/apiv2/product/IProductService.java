@@ -1,5 +1,6 @@
 package com.kshitijpatil.tazabazar.apiv2.product;
 
+import com.kshitijpatil.tazabazar.apiv2.dto.InventoryOutDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductCategoryDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductOutDto;
 
@@ -19,4 +20,6 @@ public interface IProductService {
     void clearAll();
 
     ProductOutDto getProductBySku(String productSku) throws ProductNotFoundException;
+
+    List<InventoryOutDto> getProductInventoriesBySku(String productSku) throws ProductNotFoundException;
 }

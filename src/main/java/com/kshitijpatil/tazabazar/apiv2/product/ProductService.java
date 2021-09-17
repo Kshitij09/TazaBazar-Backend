@@ -1,5 +1,6 @@
 package com.kshitijpatil.tazabazar.apiv2.product;
 
+import com.kshitijpatil.tazabazar.apiv2.dto.InventoryOutDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductCategoryDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductOutDto;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class ProductService implements IProductService {
     private final JdbcAggregateTemplate aggregateTemplate;
     private final ProductRepository products;
     private final ProductCategoryRepository productCategories;
+    private final InventoryRepository inventories;
 
     @Override
     public Product saveProduct(Product product) {
@@ -61,5 +63,13 @@ public class ProductService implements IProductService {
         return products.findById(productSku)
                 .map(ProductMapper::toProductOutDto)
                 .orElseThrow(() -> new ProductNotFoundException(productSku));
+    }
+
+    @Override
+    public List<InventoryOutDto> getProductInventoriesBySku(String productSku) throws ProductNotFoundException {
+        if (!products.skuExists(productSku)) throw new ProductNotFoundException(productSku);
+        return StreamSupport.stream(inventories.findAllBySku(productSku).spliterator(), false)
+                .map(ProductMapper::toInventoryOutDto)
+                .collect(Collectors.toList());
     }
 }

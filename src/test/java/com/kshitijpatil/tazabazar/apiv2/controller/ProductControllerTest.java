@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.kshitijpatil.tazabazar.ApiError;
 import com.kshitijpatil.tazabazar.ApiErrorResponse;
 import com.kshitijpatil.tazabazar.ApiServerApplication;
+import com.kshitijpatil.tazabazar.apiv2.dto.InventoryOutDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductCategoryDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.ProductOutDto;
 import com.kshitijpatil.tazabazar.apiv2.product.ProductMapper;
@@ -22,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.kshitijpatil.tazabazar.apiv2.TestUtils.assertNotEmptyAndGet;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -95,6 +97,39 @@ public class ProductControllerTest {
     @Test
     public void getProductBySkuWhenSkuDoesNotExistShouldReturnError() throws Exception {
         var result = mockMvc.perform(get("/api/v2/products/unknown"))
+                .andDo(print())
+                .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
+                .andReturn();
+        var responseString = result.getResponse().getContentAsString();
+        ApiErrorResponse actual = mapper.readValue(responseString, ApiErrorResponse.class);
+        ApiError expected = new ProductNotFoundException("unknown");
+        assertThat(actual.getError()).isEqualTo(expected.getError());
+        assertThat(actual.getMessage()).isEqualTo(expected.getMessage());
+    }
+
+    @Test
+    public void getProductInventoriesWhenSkuExistsShouldReturnObject() throws Exception {
+        var productSku = "dlpl-001";
+        var expected = assertNotEmptyAndGet(products.findById(productSku));
+        var inventoriesUri = String.format("/api/v2/products/%s/inventories", productSku);
+        var result = mockMvc.perform(get(inventoriesUri))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        var responseString = result.getResponse().getContentAsString();
+        List<InventoryOutDto> actual = mapper.readValue(responseString, new TypeReference<>() {
+        });
+        assertThat(actual).isNotEmpty();
+        var expectedInventories = expected.inventories.stream()
+                .map(ProductMapper::toInventoryOutDto)
+                .collect(Collectors.toList());
+        assertThat(actual).containsAll(expectedInventories);
+    }
+
+    @Test
+    public void getProductInventoriesWhenSkuDoesNotExistShouldReturnError() throws Exception {
+        var inventoriesUri = "/api/v2/products/unknown/inventories";
+        var result = mockMvc.perform(get(inventoriesUri))
                 .andDo(print())
                 .andExpect(status().is(HttpStatus.NOT_FOUND.value()))
                 .andReturn();
