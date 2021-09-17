@@ -12,4 +12,10 @@ public interface ProductRepository extends CrudRepository<Product, String> {
 
     @Query("SELECT exists (SELECT true FROM product where sku = :sku)")
     boolean skuExists(@Param("sku") String productSku);
+
+    @Query("SELECT * FROM product where name @@ :query")
+    List<Product> searchProductByName(@Param("query") String query);
+
+    @Query("SELECT * FROM product where name @@ :nameQuery and category = :category")
+    List<Product> searchProductByCategoryAndName(@Param("category") String category, @Param("nameQuery") String query);
 }

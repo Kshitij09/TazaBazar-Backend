@@ -129,4 +129,54 @@ public class ProductRepositoryTest {
         carrot.addAll(inventory200gm, inventory200gm2);
         assertThatThrownBy(() -> template.insert(carrot)).hasCauseInstanceOf(DuplicateKeyException.class);
     }
+
+    @Test
+    @Transactional
+    public void testSkuExists() {
+        var vegetables = insertVegetablesCategory();
+        var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
+                "Carrot",
+                AggregateReference.to(vegetables.label));
+        template.insert(carrot);
+        assertThat(products.skuExists(carrot.sku)).isTrue();
+    }
+
+    @Test
+    @Transactional
+    public void testSearchProductByName() {
+        var vegetables = insertVegetablesCategory();
+        var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
+                "Carrot",
+                AggregateReference.to(vegetables.label));
+        var leafyVegetables = template.insert(new ProductCategory("leafy-vegetables",
+                "lfvgt",
+                "Leafy Vegetables"));
+        var kadiPatta = new Product(String.format("%s-001", leafyVegetables.skuPrefix),
+                "Kadi Patta / Curry Leaves",
+                AggregateReference.to(leafyVegetables.label));
+        template.insert(kadiPatta);
+        template.insert(carrot);
+        assertThat(products.searchProductByName("sagkkjal")).isEmpty();
+        assertThat(products.searchProductByName("curry leave")).containsOnly(kadiPatta);
+    }
+
+    @Test
+    public void testSearchProductByCategoryAndName() {
+        var vegetables = insertVegetablesCategory();
+        var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
+                "Carrot",
+                AggregateReference.to(vegetables.label));
+        var leafyVegetables = template.insert(new ProductCategory("leafy-vegetables",
+                "lfvgt",
+                "Leafy Vegetables"));
+        var kadiPatta = new Product(String.format("%s-001", leafyVegetables.skuPrefix),
+                "Kadi Patta / Curry Leaves",
+                AggregateReference.to(leafyVegetables.label));
+        template.insert(kadiPatta);
+        template.insert(carrot);
+        assertThat(products.searchProductByCategoryAndName(vegetables.label, "kadi")).isEmpty();
+        assertThat(products.searchProductByCategoryAndName(vegetables.label, "carrot")).containsOnly(carrot);
+        assertThat(products.searchProductByCategoryAndName(leafyVegetables.label, "carrot")).isEmpty();
+        assertThat(products.searchProductByCategoryAndName(leafyVegetables.label, "curry leave")).containsOnly(kadiPatta);
+    }
 }
