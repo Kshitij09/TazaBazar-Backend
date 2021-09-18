@@ -10,10 +10,7 @@ import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Table("purchase_order")
@@ -42,7 +39,7 @@ public class Order {
     }
 
     public static OrderLine createOrderLine(Inventory inventory, Long quantity) {
-        return new OrderLine(inventory, quantity);
+        return new OrderLine(AggregateReference.to(inventory.id), quantity);
     }
 
     public void add(OrderLine orderLine) {
@@ -51,5 +48,9 @@ public class Order {
 
     public void addAll(OrderLine... orderLines) {
         Arrays.stream(orderLines).forEach(this::add);
+    }
+
+    public void addAll(Collection<OrderLine> orderLines) {
+        orderLines.forEach(this::add);
     }
 }
