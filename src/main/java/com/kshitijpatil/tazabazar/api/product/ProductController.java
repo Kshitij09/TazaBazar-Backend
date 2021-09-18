@@ -2,6 +2,7 @@ package com.kshitijpatil.tazabazar.api.product;
 
 import com.kshitijpatil.tazabazar.api.inventory.InventoryDto;
 import com.kshitijpatil.tazabazar.api.inventory.InventoryService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Product")
+@Hidden
 @SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/products")

@@ -8,6 +8,7 @@ import com.kshitijpatil.tazabazar.api.security.service.IUserService;
 import com.kshitijpatil.tazabazar.security.JwtCreateService;
 import com.kshitijpatil.tazabazar.security.dto.AuthRequest;
 import com.kshitijpatil.tazabazar.security.dto.RefreshTokenResponse;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 
 @Tag(name = "Authentication")
 @RestController
+@Hidden
 @RequestMapping("/api/auth")
 @Deprecated
 public class AuthController {
