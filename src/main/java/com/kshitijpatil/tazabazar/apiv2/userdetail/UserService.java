@@ -146,4 +146,13 @@ public class UserService implements IUserService, UserDetailsService {
         });
         return UserMapper.toUserDetailView(users.save(user));
     }
+
+    @Override
+    public List<CartItemDto> getCartOf(String username) throws UsernameNotFoundException {
+        var user = users.findById(username)
+                .orElseThrow(usernameNotFoundExceptionSupplier(username));
+        return user.cart.stream()
+                .map(UserMapper::toCartItemDto)
+                .collect(Collectors.toList());
+    }
 }

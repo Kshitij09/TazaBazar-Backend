@@ -44,4 +44,11 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return ResponseEntity.ok(userService.updateCart(username, cartItems));
     }
+
+    @GetMapping("{username}/cart")
+    public ResponseEntity<List<CartItemDto>> getUserCart(@PathVariable("username") String username, Principal principal) {
+        if (!principal.getName().equals(username))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.ok(userService.getCartOf(username));
+    }
 }
