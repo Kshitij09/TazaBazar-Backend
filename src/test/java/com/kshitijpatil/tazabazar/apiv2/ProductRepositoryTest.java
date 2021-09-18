@@ -92,7 +92,7 @@ public class ProductRepositoryTest {
         var inventory500gm = new Inventory("500gm", 25.0, Instant.now(), 100);
         carrot.addAll(inventory200gm, inventory500gm);
         template.insert(carrot);
-        var reloaded = inventories.findById(new InventoryId(inventory200gm.id, carrot.sku));
+        var reloaded = inventories.findById(inventory200gm.id);
         assertThat(reloaded).isNotEmpty();
         assertThat(reloaded.get()).isEqualTo(inventory200gm);
         var inventoriesFromRepo = inventories.findAllBySku(carrot.sku);
@@ -111,8 +111,7 @@ public class ProductRepositoryTest {
         carrot.addAll(inventory200gm, inventory500gm);
         template.insert(carrot);
         var reloaded = inventories.findAllById(
-                Arrays.asList(new InventoryId(inventory200gm.id, carrot.sku),
-                        new InventoryId(inventory500gm.id, carrot.sku))
+                Arrays.asList(inventory200gm.id, inventory500gm.id)
         );
         assertThat(reloaded).isNotEmpty();
     }
@@ -161,6 +160,7 @@ public class ProductRepositoryTest {
     }
 
     @Test
+    @Transactional
     public void testSearchProductByCategoryAndName() {
         var vegetables = insertVegetablesCategory();
         var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),

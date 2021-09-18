@@ -22,6 +22,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Random;
 
 import static com.kshitijpatil.tazabazar.apiv2.TestUtils.assertNotEmptyAndGet;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,6 +39,7 @@ public class UserRepositoryTest {
     UserRepository users;
     @Autowired
     InventoryRepository inventories;
+    private final Random random = new Random();
 
     private final User user1 = new User("johndoe@test.com",
             "John Doe",
@@ -54,7 +57,7 @@ public class UserRepositoryTest {
         assertThat(reloaded).isEqualTo(user);
     }
 
-    private void populateProductInventories() {
+    private List<Inventory> populateProductInventories() {
         var vegetables = new ProductCategory("vegetables", "vgt", "Vegetables");
         template.insert(vegetables);
         var carrot = new Product(String.format("%s-001", vegetables.skuPrefix),
@@ -64,6 +67,7 @@ public class UserRepositoryTest {
         var inventory500gm = new Inventory("500gm", 25., Instant.now(), 100);
         carrot.addAll(inventory200gm, inventory500gm);
         template.insert(carrot);
+        return List.of(inventory200gm, inventory500gm);
     }
 
     @Test
@@ -100,11 +104,8 @@ public class UserRepositoryTest {
     @Transactional
     public void testUserCart() {
         User user = SerializationUtils.clone(user2);
-        populateProductInventories();
-        var inv1 = assertNotEmptyAndGet(inventories.findByIdAndSku(1L, "vgt-001"));
-        var inv2 = assertNotEmptyAndGet(inventories.findByIdAndSku(2L, "vgt-001"));
-        user.addToCart(inv1, 2L);
-        user.addToCart(inv2, 3L);
+        var savedInventories = populateProductInventories();
+        savedInventories.forEach(inv -> user.addToCart(inv, random.nextInt(7) + 1L));
         template.insert(user);
     }
 }

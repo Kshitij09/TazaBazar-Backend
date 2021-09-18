@@ -20,6 +20,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static com.kshitijpatil.tazabazar.apiv2.TestUtils.assertNotEmptyAndGet;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,6 +47,7 @@ public class OrderRepositoryTest {
     private ProductRepository products;
     @Autowired
     private ProductCategoryRepository productCategories;
+    private final Random random = new Random();
 
     private ProductCategory insertVegetablesCategory() {
         var vegetables = new ProductCategory("vegetables", "vgt", "Vegetables");
@@ -71,14 +75,14 @@ public class OrderRepositoryTest {
                 "+919090909090");
         var savedUser = template.insert(user1);
 
-        var inv1 = assertNotEmptyAndGet(inventories.findByIdAndSku(1L, "vgt-001"));
-        var inv2 = assertNotEmptyAndGet(inventories.findByIdAndSku(2L, "vgt-001"));
+        var vegetableInventories = inventories.findAllBySku("vgt-001");
         var order = new Order(AggregateReference.to(savedUser.username), Instant.now(), OrderStatus.ACCEPTED);
-        var ol1 = Order.createOrderLine(inv1, 4L);
-        var ol2 = Order.createOrderLine(inv2, 6L);
-        order.addAll(ol1, ol2);
+        var orderLines = StreamSupport.stream(vegetableInventories.spliterator(), false)
+                .map(inv -> Order.createOrderLine(inv, random.nextInt(7) + 1L))
+                .collect(Collectors.toList());
+        order.addAll(orderLines);
         var saved = orders.save(order);
         var reloaded = assertNotEmptyAndGet(orders.findById(saved.getId()));
-        assertThat(reloaded.getOrderLines()).containsOnly(ol1, ol2);
+        assertThat(reloaded.getOrderLines()).containsAll(orderLines);
     }
 }
