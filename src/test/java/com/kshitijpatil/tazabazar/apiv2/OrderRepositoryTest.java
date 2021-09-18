@@ -85,4 +85,25 @@ public class OrderRepositoryTest {
         var reloaded = assertNotEmptyAndGet(orders.findById(saved.getId()));
         assertThat(reloaded.getOrderLines()).containsAll(orderLines);
     }
+
+    @Test
+    @Transactional
+    public void testGetUsernameByOrderId() {
+        User user1 = new User("johndoe@test.com",
+                "John Doe",
+                "+919090909090");
+        var savedUser = template.insert(user1);
+
+        var vegetableInventories = inventories.findAllBySku("vgt-001");
+        var order = new Order(AggregateReference.to(savedUser.username), Instant.now(), OrderStatus.ACCEPTED);
+        var orderLines = StreamSupport.stream(vegetableInventories.spliterator(), false)
+                .map(inv -> Order.createOrderLine(inv, random.nextInt(7) + 1L))
+                .collect(Collectors.toList());
+        order.addAll(orderLines);
+        var saved = orders.save(order);
+        assertThat(saved.id).isNotNull();
+        var actual = orders.getUsernameById(saved.id);
+        assertThat(actual).isNotEmpty();
+        assertThat(actual.get()).isEqualTo(user1.username);
+    }
 }

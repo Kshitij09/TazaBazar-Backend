@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.kshitijpatil.tazabazar.ApiErrorResponse;
 import com.kshitijpatil.tazabazar.apiv2.dto.LoginResponse;
+import com.kshitijpatil.tazabazar.apiv2.dto.OrderDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.OrderLineDto;
+import com.kshitijpatil.tazabazar.apiv2.order.OrderStatus;
 import com.kshitijpatil.tazabazar.apiv2.product.ProductRepository;
 import com.kshitijpatil.tazabazar.security.dto.AuthRequest;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,7 +60,7 @@ public class OrderControllerTest {
     private List<OrderLineDto> getOrderLines() {
         List<OrderLineDto> orderLines = new ArrayList<>();
         orderLines.add(new OrderLineDto(1L, 5L));
-        orderLines.add(new OrderLineDto(5L, 1L));
+        orderLines.add(new OrderLineDto(3L, 4L));
         orderLines.add(new OrderLineDto(8L, 2L));
         return orderLines;
     }
@@ -94,5 +97,31 @@ public class OrderControllerTest {
                 .getContentAsString();
         var apiError = mapper.readValue(responseString, ApiErrorResponse.class);
         assertThat(apiError.getError()).isEqualTo("inv-001");
+    }
+
+    @Test
+    @Transactional
+    public void testGetOrderByIdAuthorized() throws Exception {
+        var username = "john.doe@test.com";
+        var loginResponse = performLogin(username, "1234");
+        var orderLines = getOrderLines();
+        var responseString = performPlaceOrder(orderLines, loginResponse.getAccessToken())
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse().getContentAsString();
+        var orderResponse = mapper.readValue(responseString, OrderDto.class);
+        var getRequest = get("/api/v2/orders/" + orderResponse.id)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getAccessToken())
+                .accept(MediaType.APPLICATION_JSON);
+        var getOrderResponse = mockMvc.perform(getRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse().getContentAsString();
+        var orderDto = mapper.readValue(getOrderResponse, OrderDto.class);
+        assertThat(orderDto.username).isEqualTo(username);
+        assertThat(orderDto.orderLines).containsAll(orderLines);
+        assertThat(orderDto.status).isEqualTo(OrderStatus.ACCEPTED);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.kshitijpatil.tazabazar.utils.ExceptionUtils.usernameNotFoundExceptionSupplier;
@@ -36,6 +37,19 @@ public class OrderService implements IOrderService {
         var savedOrderLines = saved.orderLines.stream()
                 .map(orderLine -> new OrderLineDto(orderLine.inventoryId.getId(), orderLine.quantity))
                 .collect(Collectors.toSet());
-        return new OrderDto(saved.id, saved.createdAt, saved.status, savedOrderLines);
+        return new OrderDto(saved.id, saved.username.getId(), saved.createdAt, saved.status, savedOrderLines);
+    }
+
+    @Override
+    public String getOrderCreatorById(UUID orderId) throws OrderNotFoundException {
+        return orders.getUsernameById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId.toString()));
+    }
+
+    @Override
+    public OrderDto getOrderById(UUID orderId) throws OrderNotFoundException {
+        return orders.findById(orderId)
+                .map(OrderMapper::toOrderDto)
+                .orElseThrow(() -> new OrderNotFoundException(orderId.toString()));
     }
 }
