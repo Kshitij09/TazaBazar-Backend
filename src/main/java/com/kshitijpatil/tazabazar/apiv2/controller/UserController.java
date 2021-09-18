@@ -7,6 +7,7 @@ import com.kshitijpatil.tazabazar.apiv2.dto.UserDetailView;
 import com.kshitijpatil.tazabazar.apiv2.order.IOrderService;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.IUserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 
+@Tag(name = "User Specific")
 @RestController
 @SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/api/v2/users")

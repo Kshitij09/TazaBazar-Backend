@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Products (DB)")
+@Tag(name = "Products")
 @RestController
 @RequestMapping("/api/v2/products")
 @RequiredArgsConstructor

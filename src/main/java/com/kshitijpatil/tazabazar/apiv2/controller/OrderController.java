@@ -4,6 +4,7 @@ import com.kshitijpatil.tazabazar.apiv2.dto.OrderDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.OrderLineDto;
 import com.kshitijpatil.tazabazar.apiv2.order.IOrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name = "Orders")
 @RestController
 @RequestMapping("/api/v2/orders")
 @SecurityRequirement(name = "bearerAuth")

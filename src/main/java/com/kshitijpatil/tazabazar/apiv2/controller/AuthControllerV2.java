@@ -7,6 +7,7 @@ import com.kshitijpatil.tazabazar.apiv2.userdetail.IUserService;
 import com.kshitijpatil.tazabazar.security.JwtCreateService;
 import com.kshitijpatil.tazabazar.security.dto.AuthRequest;
 import com.kshitijpatil.tazabazar.security.dto.RefreshTokenResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 
+@Tag(name = "Authentication")
 @RestController
 @RequestMapping("/api/v2/auth")
 @RequiredArgsConstructor
