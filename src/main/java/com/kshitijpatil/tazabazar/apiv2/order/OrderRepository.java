@@ -10,4 +10,7 @@ import java.util.UUID;
 public interface OrderRepository extends CrudRepository<Order, UUID> {
     @Query("SELECT username FROM purchase_order WHERE id = :order_id")
     Optional<String> getUsernameById(@Param("order_id") UUID orderId);
+
+    @Query("SELECT * FROM purchase_order WHERE username = :username")
+    Iterable<Order> findOrdersByUsername(String username);
 }

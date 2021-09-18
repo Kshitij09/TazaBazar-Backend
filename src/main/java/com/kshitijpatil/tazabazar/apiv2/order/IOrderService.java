@@ -13,4 +13,6 @@ public interface IOrderService {
     String getOrderCreatorById(UUID orderId) throws OrderNotFoundException;
 
     OrderDto getOrderById(UUID orderId) throws OrderNotFoundException;
+
+    List<OrderDto> getOrdersByUsername(String username);
 }

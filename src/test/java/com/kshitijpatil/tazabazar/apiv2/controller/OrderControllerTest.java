@@ -1,5 +1,6 @@
 package com.kshitijpatil.tazabazar.apiv2.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -24,6 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,6 +46,7 @@ public class OrderControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ProductRepository products;
+    private final Random random = new Random();
 
     private LoginResponse performLogin(String username, String password) throws Exception {
         var authRequest = new AuthRequest(username, password);
@@ -59,9 +64,9 @@ public class OrderControllerTest {
 
     private List<OrderLineDto> getOrderLines() {
         List<OrderLineDto> orderLines = new ArrayList<>();
-        orderLines.add(new OrderLineDto(1L, 5L));
-        orderLines.add(new OrderLineDto(3L, 4L));
-        orderLines.add(new OrderLineDto(8L, 2L));
+        orderLines.add(new OrderLineDto(random.nextInt(10) + 1L, random.nextInt(7) + 1L));
+        orderLines.add(new OrderLineDto(random.nextInt(10) + 1L, random.nextInt(7) + 1L));
+        orderLines.add(new OrderLineDto(random.nextInt(10) + 1L, random.nextInt(7) + 1L));
         return orderLines;
     }
 
@@ -124,4 +129,60 @@ public class OrderControllerTest {
         assertThat(orderDto.orderLines).containsAll(orderLines);
         assertThat(orderDto.status).isEqualTo(OrderStatus.ACCEPTED);
     }
+
+    @Test
+    @Transactional
+    public void testGetOrderByIdUnauthorized() throws Exception {
+        var username = "john.doe@test.com";
+        var loginResponse = performLogin(username, "1234");
+        var orderLines = getOrderLines();
+        var responseString = performPlaceOrder(orderLines, loginResponse.getAccessToken())
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse().getContentAsString();
+        var orderResponse = mapper.readValue(responseString, OrderDto.class);
+        var differentUser = performLogin("john.smith@test.com", "9876");
+        var getRequest = get("/api/v2/orders/" + orderResponse.id)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + differentUser.getAccessToken())
+                .accept(MediaType.APPLICATION_JSON);
+        mockMvc.perform(getRequest)
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    private UUID performPlaceOrderAndGetId(List<OrderLineDto> orderLines, String accessToken) throws Exception {
+        var responseString = performPlaceOrder(orderLines, accessToken)
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse().getContentAsString();
+        var orderResponse = mapper.readValue(responseString, OrderDto.class);
+        return orderResponse.id;
+    }
+
+    @Test
+    @Transactional
+    public void testGetOrdersByUsername() throws Exception {
+        var username = "john.doe@test.com";
+        var loginResponse = performLogin(username, "1234");
+        var orderLines1 = getOrderLines();
+        var order1uuid = performPlaceOrderAndGetId(orderLines1, loginResponse.getAccessToken());
+        var orderLines2 = getOrderLines();
+        var order2uuid = performPlaceOrderAndGetId(orderLines2, loginResponse.getAccessToken());
+        var getRequest = get(String.format("/api/v2/users/%s/orders", username))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getAccessToken())
+                .accept(MediaType.APPLICATION_JSON);
+        var responseString = mockMvc.perform(getRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse().getContentAsString();
+        List<OrderDto> retrievedOrders = mapper.readValue(responseString, new TypeReference<>() {
+        });
+        var retrievedOrderIds = retrievedOrders.stream()
+                .map(OrderDto::getId)
+                .collect(Collectors.toList());
+        assertThat(retrievedOrderIds).containsOnly(order1uuid, order2uuid);
+    }
+
 }

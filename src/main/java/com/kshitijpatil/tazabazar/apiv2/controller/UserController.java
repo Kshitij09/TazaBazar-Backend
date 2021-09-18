@@ -1,8 +1,10 @@
 package com.kshitijpatil.tazabazar.apiv2.controller;
 
 import com.kshitijpatil.tazabazar.apiv2.dto.CartItemDto;
+import com.kshitijpatil.tazabazar.apiv2.dto.OrderDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.UserAuthView;
 import com.kshitijpatil.tazabazar.apiv2.dto.UserDetailView;
+import com.kshitijpatil.tazabazar.apiv2.order.IOrderService;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.IUserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.Objects;
 @Validated
 public class UserController {
     private final IUserService userService;
+    private final IOrderService orderService;
 
     @GetMapping
     public List<UserAuthView> getAllUsers() {
@@ -50,5 +53,12 @@ public class UserController {
         if (!principal.getName().equals(username))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         return ResponseEntity.ok(userService.getCartOf(username));
+    }
+
+    @GetMapping("{username}/orders")
+    public ResponseEntity<List<OrderDto>> getOrdersByUsername(@PathVariable("username") String username, Principal principal) {
+        if (!principal.getName().equals(username))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.ok(orderService.getOrdersByUsername(username));
     }
 }

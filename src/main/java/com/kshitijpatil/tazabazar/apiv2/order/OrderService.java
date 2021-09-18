@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static com.kshitijpatil.tazabazar.utils.ExceptionUtils.usernameNotFoundExceptionSupplier;
 
@@ -51,5 +52,12 @@ public class OrderService implements IOrderService {
         return orders.findById(orderId)
                 .map(OrderMapper::toOrderDto)
                 .orElseThrow(() -> new OrderNotFoundException(orderId.toString()));
+    }
+
+    @Override
+    public List<OrderDto> getOrdersByUsername(String username) {
+        return StreamSupport.stream(orders.findOrdersByUsername(username).spliterator(), false)
+                .map(OrderMapper::toOrderDto)
+                .collect(Collectors.toList());
     }
 }
