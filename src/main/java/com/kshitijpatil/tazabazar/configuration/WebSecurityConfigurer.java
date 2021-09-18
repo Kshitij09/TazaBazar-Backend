@@ -68,6 +68,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/content/**").permitAll()
                 .antMatchers(format("%s/**", restApiDocPath)).permitAll()
                 .antMatchers(format("%s/**", swaggerPath)).permitAll()
+                // Authenticated / Authorized
                 .antMatchers(HttpMethod.GET, "/api/v2/users").hasAuthority(Role.ROLE_ADMIN)
                 .antMatchers("/api/v2/users/**").authenticated()
                 .anyRequest().authenticated();

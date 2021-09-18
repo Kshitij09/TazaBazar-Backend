@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.kshitijpatil.tazabazar.utils.ExceptionUtils.usernameNotFoundExceptionSupplier;
+
 
 @Service("db_user_service")
 @Primary
@@ -64,7 +66,7 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public void storeRefreshTokenFor(String username, String refreshToken) throws UsernameNotFoundException {
         var user = userAccounts.findById(username)
-                .orElseThrow(() -> makeUsernameNotFoundException(username));
+                .orElseThrow(usernameNotFoundExceptionSupplier(username));
         user.setRefreshToken(refreshToken);
         userAccounts.save(user);
     }
@@ -72,7 +74,7 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var userAuth = userAccounts.findById(username)
-                .orElseThrow(() -> makeUsernameNotFoundException(username));
+                .orElseThrow(usernameNotFoundExceptionSupplier(username));
         var userRoles = userAuth.grantedAuthorities.stream()
                 .map(Authority::getAuthority)
                 .map(SimpleGrantedAuthority::new)
@@ -87,22 +89,16 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public UserView loadUserViewByUsername(String username) throws UsernameNotFoundException {
         var userAuth = userAccounts.findById(username)
-                .orElseThrow(() -> makeUsernameNotFoundException(username));
+                .orElseThrow(usernameNotFoundExceptionSupplier(username));
         // At this point, we can be sure that user exists (one-to-one mapping)
         var userDetails = users.findById(username).get();
         return UserMapper.toUserView(userDetails, userAuth);
     }
 
-    private UsernameNotFoundException makeUsernameNotFoundException(String username) {
-        return new UsernameNotFoundException(
-                String.format("User: %s, not found", username)
-        );
-    }
-
     @Override
     public UserAuthView loadUserAuthViewByUsername(String username) throws UsernameNotFoundException {
         return userAccounts.getUserAuthViewByUsername(username)
-                .orElseThrow(() -> makeUsernameNotFoundException(username));
+                .orElseThrow(usernameNotFoundExceptionSupplier(username));
     }
 
     @Override
