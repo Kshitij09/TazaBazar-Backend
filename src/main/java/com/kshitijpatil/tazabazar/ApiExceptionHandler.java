@@ -61,6 +61,11 @@ public class ApiExceptionHandler {
         return getResponseEntityFor(ex, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler
+    public ResponseEntity<ApiErrorResponse> handleApiException(com.kshitijpatil.tazabazar.apiv2.product.InventoryNotFoundException ex) {
+        return getResponseEntityFor(ex, HttpStatus.NOT_FOUND);
+    }
+
     private ApiError toApiError(ValidationException exception) {
         final String DEFAULT_ERROR_CODE = "val-001";
         return new ApiError() {
