@@ -17,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -53,19 +54,28 @@ public class OrderControllerTest {
         return mapper.readValue(loginResponseString, LoginResponse.class);
     }
 
-    @Test
-    @Transactional
-    public void placeOrderWithValidInventoriesShouldSucceed() throws Exception {
-        var loginResponse = performLogin("john.doe@test.com", "1234");
+    private List<OrderLineDto> getOrderLines() {
         List<OrderLineDto> orderLines = new ArrayList<>();
         orderLines.add(new OrderLineDto(1L, 5L));
         orderLines.add(new OrderLineDto(5L, 1L));
         orderLines.add(new OrderLineDto(8L, 2L));
+        return orderLines;
+    }
+
+    private ResultActions performPlaceOrder(List<OrderLineDto> orderLines, String accessToken) throws Exception {
         var request = post("/api/v2/orders")
                 .content(mapper.writeValueAsString(orderLines))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getAccessToken())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .contentType(MediaType.APPLICATION_JSON);
-        mockMvc.perform(request)
+        return mockMvc.perform(request);
+    }
+
+    @Test
+    @Transactional
+    public void placeOrderWithValidInventoriesShouldSucceed() throws Exception {
+        var loginResponse = performLogin("john.doe@test.com", "1234");
+        var orderLines = getOrderLines();
+        performPlaceOrder(orderLines, loginResponse.getAccessToken())
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -74,15 +84,9 @@ public class OrderControllerTest {
     @Transactional
     public void placeOrderWithInvalidInventoryShouldReturn404() throws Exception {
         var loginResponse = performLogin("john.doe@test.com", "1234");
-        List<OrderLineDto> orderLines = new ArrayList<>();
-        orderLines.add(new OrderLineDto(1L, 5L));
-        orderLines.add(new OrderLineDto(500L, 1L));
-        orderLines.add(new OrderLineDto(8L, 2L));
-        var request = post("/api/v2/orders")
-                .content(mapper.writeValueAsString(orderLines))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getAccessToken())
-                .contentType(MediaType.APPLICATION_JSON);
-        var responseString = mockMvc.perform(request)
+        List<OrderLineDto> orderLines = getOrderLines();
+        orderLines.add(new OrderLineDto(500L, 2L));
+        var responseString = performPlaceOrder(orderLines, loginResponse.getAccessToken())
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andReturn()
