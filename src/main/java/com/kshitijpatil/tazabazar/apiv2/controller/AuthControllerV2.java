@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,7 +32,7 @@ public class AuthControllerV2 {
     private final IUserService userService;
 
     @PostMapping("login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid AuthRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody @Validated AuthRequest request) {
         try {
             Authentication authenticate = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
