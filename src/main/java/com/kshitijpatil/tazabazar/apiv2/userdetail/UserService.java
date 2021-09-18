@@ -1,8 +1,8 @@
 package com.kshitijpatil.tazabazar.apiv2.userdetail;
 
-import com.kshitijpatil.tazabazar.apiv2.dto.CreateUserRequest;
-import com.kshitijpatil.tazabazar.apiv2.dto.UserAuthView;
-import com.kshitijpatil.tazabazar.apiv2.dto.UserView;
+import com.kshitijpatil.tazabazar.apiv2.dto.*;
+import com.kshitijpatil.tazabazar.apiv2.product.InventoryNotFoundException;
+import com.kshitijpatil.tazabazar.apiv2.product.InventoryRepository;
 import com.kshitijpatil.tazabazar.apiv2.userauth.*;
 import com.kshitijpatil.tazabazar.security.jwt.RefreshTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +33,7 @@ public class UserService implements IUserService, UserDetailsService {
     private final UserRepository users;
     private final UserAuthRepository userAccounts;
     private final RoleRepository roles;
+    private final InventoryRepository inventories;
     private final JdbcAggregateTemplate template;
     private final PasswordEncoder passwordEncoder;
 
@@ -131,5 +132,18 @@ public class UserService implements IUserService, UserDetailsService {
         roles.deleteAll();
         userAccounts.deleteAll();
         users.deleteAll();
+    }
+
+    @Override
+    public UserDetailView updateCart(String username, List<CartItemDto> cartItems) throws InventoryNotFoundException, UsernameNotFoundException {
+        var user = users.findById(username)
+                .orElseThrow(usernameNotFoundExceptionSupplier(username));
+        user.clearCart();
+        cartItems.forEach(cartItem -> {
+            var inventory = inventories.findById(cartItem.inventoryId)
+                    .orElseThrow(() -> new InventoryNotFoundException(cartItem.inventoryId));
+            user.addToCart(inventory, cartItem.quantity);
+        });
+        return UserMapper.toUserDetailView(users.save(user));
     }
 }

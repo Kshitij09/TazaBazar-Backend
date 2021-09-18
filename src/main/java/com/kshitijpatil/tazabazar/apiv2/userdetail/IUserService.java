@@ -1,8 +1,7 @@
 package com.kshitijpatil.tazabazar.apiv2.userdetail;
 
-import com.kshitijpatil.tazabazar.apiv2.dto.CreateUserRequest;
-import com.kshitijpatil.tazabazar.apiv2.dto.UserAuthView;
-import com.kshitijpatil.tazabazar.apiv2.dto.UserView;
+import com.kshitijpatil.tazabazar.apiv2.dto.*;
+import com.kshitijpatil.tazabazar.apiv2.product.InventoryNotFoundException;
 import com.kshitijpatil.tazabazar.apiv2.userauth.Role;
 import com.kshitijpatil.tazabazar.security.jwt.RefreshTokenNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,4 +25,6 @@ public interface IUserService {
     Role addRole(Role role);
 
     void clearAll();
+
+    UserDetailView updateCart(String username, List<CartItemDto> cartItems) throws InventoryNotFoundException, UsernameNotFoundException;
 }

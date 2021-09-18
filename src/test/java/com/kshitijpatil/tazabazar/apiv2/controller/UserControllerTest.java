@@ -1,8 +1,8 @@
 package com.kshitijpatil.tazabazar.apiv2.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kshitijpatil.tazabazar.apiv2.dto.CartItemDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.LoginResponse;
-import com.kshitijpatil.tazabazar.apiv2.initializer.ProductInitializer;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.IUserService;
 import com.kshitijpatil.tazabazar.security.dto.AuthRequest;
 import org.junit.jupiter.api.Test;
@@ -10,14 +10,15 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,8 +31,6 @@ public class UserControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private IUserService userService;
-    @MockBean
-    private ProductInitializer productInitializer;
 
     private LoginResponse performLogin(String username, String password) throws Exception {
         var authRequest = new AuthRequest(username, password);
@@ -98,5 +97,37 @@ public class UserControllerTest {
         mockMvc.perform(authenticatedRequest)
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAuthorizedUpdateCartByUsername() throws Exception {
+        var loginResponse = performLogin("john.doe@test.com", "1234");
+        var cartItems = new ArrayList<CartItemDto>();
+        cartItems.add(new CartItemDto(1L, 1L));
+        cartItems.add(new CartItemDto(2L, 4L));
+        cartItems.add(new CartItemDto(3L, 6L));
+        var request = put("/api/v2/users/john.doe@test.com/cart")
+                .content(mapper.writeValueAsString(cartItems))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getAccessToken());
+        mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testUnauthorizedUpdateCartByUsername() throws Exception {
+        var loginResponse = performLogin("john.doe@test.com", "1234");
+        var cartItems = new ArrayList<CartItemDto>();
+        cartItems.add(new CartItemDto(1L, 1L));
+        cartItems.add(new CartItemDto(2L, 4L));
+        cartItems.add(new CartItemDto(3L, 6L));
+        var request = put("/api/v2/users/unknown@test.com/cart")
+                .content(mapper.writeValueAsString(cartItems))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + loginResponse.getAccessToken());
+        mockMvc.perform(request)
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 }

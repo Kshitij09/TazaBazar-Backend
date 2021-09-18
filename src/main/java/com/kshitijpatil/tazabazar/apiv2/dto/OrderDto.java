@@ -1,5 +1,7 @@
 package com.kshitijpatil.tazabazar.apiv2.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.kshitijpatil.tazabazar.apiv2.order.OrderStatus;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.User;
 import lombok.AllArgsConstructor;
@@ -14,6 +16,7 @@ import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class OrderDto {
     public UUID id;
     public Instant createdAt;

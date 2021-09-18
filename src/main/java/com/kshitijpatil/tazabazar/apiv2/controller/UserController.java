@@ -1,22 +1,26 @@
 package com.kshitijpatil.tazabazar.apiv2.controller;
 
+import com.kshitijpatil.tazabazar.apiv2.dto.CartItemDto;
 import com.kshitijpatil.tazabazar.apiv2.dto.UserAuthView;
+import com.kshitijpatil.tazabazar.apiv2.dto.UserDetailView;
 import com.kshitijpatil.tazabazar.apiv2.userdetail.IUserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping("/api/v2/users")
 @RequiredArgsConstructor
+@Validated
 public class UserController {
     private final IUserService userService;
 
@@ -32,5 +36,12 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         var userView = userService.loadUserAuthViewByUsername(username);
         return ResponseEntity.ok(userView);
+    }
+
+    @PutMapping("{username}/cart")
+    public ResponseEntity<UserDetailView> updateUserCart(@PathVariable("username") String username, @RequestBody List<CartItemDto> cartItems, Principal principal) {
+        if (!principal.getName().equals(username))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.ok(userService.updateCart(username, cartItems));
     }
 }
