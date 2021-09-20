@@ -37,7 +37,7 @@ public class AuthControllerTest {
     @Test
     @Transactional
     public void testCreateAccount() throws Exception {
-        var createRequest = new CreateUserRequest("kshitij", "1234", "1234567890");
+        var createRequest = new CreateUserRequest("kshitij@test.com", "1234", "1234567890");
         createRequest.fullName = "Kshitij Patil";
         var requestBody = mapper.writeValueAsString(createRequest);
         var request = post("/api/v2/auth/register")
@@ -57,7 +57,7 @@ public class AuthControllerTest {
     @Test
     @Transactional
     public void testLogin() throws Exception {
-        var createRequest = new CreateUserRequest("kshitij", "1234", "1234567890");
+        var createRequest = new CreateUserRequest("kshitij@test.com", "1234", "1234567890");
         createRequest.fullName = "Kshitij Patil";
         createRequest.addAuthority("ROLE_USER");
         userService.createUser(createRequest);
@@ -84,7 +84,7 @@ public class AuthControllerTest {
     @Transactional
     public void testRefreshToken() throws Exception {
         // Setup
-        var createRequest = new CreateUserRequest("kshitij", "1234", "1234567890");
+        var createRequest = new CreateUserRequest("kshitij@test.com", "1234", "1234567890");
         createRequest.fullName = "Kshitij Patil";
         createRequest.addAuthority("ROLE_USER");
         userService.createUser(createRequest);
