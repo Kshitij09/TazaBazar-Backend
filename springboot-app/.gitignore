@@ -38,3 +38,6 @@ out/
 
 ### Local Configuration ###
 .env
+
+## JWT Keys
+src/main/resources/keys/
