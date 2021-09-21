@@ -1,0 +1,5 @@
+### Local Configuration ###
+.env
+
+### Gradle files generated via scripts ###
+.gradle
