@@ -3,3 +3,5 @@
 
 ### Gradle files generated via scripts ###
 .gradle
+
+deployment/backend/target
