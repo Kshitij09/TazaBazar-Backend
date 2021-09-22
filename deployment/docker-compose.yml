@@ -24,6 +24,7 @@ services:
         environment:
             WAIT_HOSTS: "database:5432"
             WAIT_SLEEP_INTERVAL: 5
+            WAIT_TIMEOUT: 90
         volumes:
             - ${FILESTORE_SOURCE_PATH}:${FILESTORE_PATH}
         ports:
