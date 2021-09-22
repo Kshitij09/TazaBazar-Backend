@@ -8,11 +8,13 @@ import com.kshitijpatil.tazabazar.apiv2.product.ProductCategory;
 import com.kshitijpatil.tazabazar.utils.JsonDataSource;
 import com.kshitijpatil.tazabazar.utils.MockDataFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +27,13 @@ public class ProductInitializer implements ApplicationListener<ApplicationReadyE
     private final JsonDataSource jsonDataSource;
     private final IProductService productService;
     private final Map<String, Supplier<List<ProductInDto>>> productSupplier = new HashMap<>();
+    @Value("${filestore.address}")
+    private String fileStoreAddress;
+
+    private String getImageUriFor(String originalUri) {
+        var filename = originalUri.substring(originalUri.lastIndexOf("/") + 1);
+        return fileStoreAddress + Paths.get("/content", filename);
+    }
 
     public ProductInitializer(JsonDataSource jsonDataSource, IProductService productService) {
         this.jsonDataSource = jsonDataSource;
@@ -64,6 +73,7 @@ public class ProductInitializer implements ApplicationListener<ApplicationReadyE
             var nextProductId = String.format("%03d", idx + 1);
             var productSku = String.format("%s-%s", category.skuPrefix, nextProductId);
             var product = new Product(productSku, productDto.getName(), AggregateReference.to(category.label));
+            product.imageUri = getImageUriFor(productDto.getImageUri());
             var defaultInventory = makeDefaultInventoryFrom(productDto);
             product.add(defaultInventory);
             productService.saveProduct(product);

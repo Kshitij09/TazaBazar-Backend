@@ -11,6 +11,7 @@ public class ProductMapper {
         productDto.setName(product.name);
         productDto.setSku(product.sku);
         productDto.setCategory(product.category.getId());
+        productDto.setImageUri(product.imageUri);
         var inventoriesDto = product.inventories.stream()
                 .map(ProductMapper::toInventoryOutDto)
                 .collect(Collectors.toSet());

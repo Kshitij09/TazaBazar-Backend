@@ -14,6 +14,7 @@ public class Product {
     @NotBlank
     public String name;
     public AggregateReference<ProductCategory, String> category;
+    public String imageUri;
     @MappedCollection(idColumn = "product_sku")
     public Set<Inventory> inventories = new HashSet<>();
 

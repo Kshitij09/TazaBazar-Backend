@@ -19,6 +19,7 @@ create table product(
     sku varchar(80) primary key,
     name varchar(120) not null check(name <> ''),
     category varchar(50),
+    image_uri text,
     foreign key (category) references product_category(label)
 );
 

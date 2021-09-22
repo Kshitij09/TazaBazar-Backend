@@ -4,8 +4,9 @@ RUN wget -O /wait https://github.com/ufoscout/docker-compose-wait/releases/downl
 
 FROM adoptopenjdk/openjdk11:alpine-slim
 RUN addgroup -S tzb && adduser -S tzb-user -G tzb
+RUN mkdir -p /var/www/app/public && chown tzb-user:tzb /var/www/app/public
 USER tzb-user
-COPY --from=builder --chown=tzb-user:tzb /wait /wait
+COPY --from=builder /wait /wait
 ARG DEPENDENCY=target
 COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY ${DEPENDENCY}/META-INF /app/META-INF

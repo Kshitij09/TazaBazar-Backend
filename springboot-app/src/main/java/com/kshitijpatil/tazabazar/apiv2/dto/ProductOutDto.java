@@ -13,5 +13,6 @@ public class ProductOutDto {
     public String sku;
     public String name;
     public String category;
+    public String imageUri;
     public Set<InventoryOutDto> inventories = new HashSet<>();
 }
