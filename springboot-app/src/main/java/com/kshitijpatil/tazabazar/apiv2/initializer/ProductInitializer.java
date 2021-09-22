@@ -32,7 +32,7 @@ public class ProductInitializer implements ApplicationListener<ApplicationReadyE
 
     private String getImageUriFor(String originalUri) {
         var filename = originalUri.substring(originalUri.lastIndexOf("/") + 1);
-        return fileStoreAddress + Paths.get("/content", filename);
+        return String.format("http://%s/content/%s", fileStoreAddress, filename);
     }
 
     public ProductInitializer(JsonDataSource jsonDataSource, IProductService productService) {
