@@ -49,7 +49,7 @@ public class ProductService implements IProductService {
     @Override
     public List<ProductCategoryDto> getAllCategories() {
         return StreamSupport.stream(productCategories.findAll().spliterator(), false)
-                .map(category -> new ProductCategoryDto(category.label, category.name, category.skuPrefix))
+                .map(category -> new ProductCategoryDto(category.label, category.skuPrefix, category.name))
                 .collect(Collectors.toList());
     }
 
