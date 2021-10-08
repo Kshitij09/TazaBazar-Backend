@@ -5,18 +5,17 @@ import com.kshitijpatil.tazabazar.apiv2.product.InventoryNotFoundException;
 import com.kshitijpatil.tazabazar.apiv2.userauth.Role;
 import com.kshitijpatil.tazabazar.security.jwt.RefreshTokenNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.List;
 
 public interface IUserService {
     UserAuthView createUser(CreateUserRequest user) throws UsernameExistsException, PhoneExistsException;
 
-    void storeRefreshTokenFor(String username, String refreshToken) throws UsernameNotFoundException;
+    void storeRefreshTokenFor(String username, String refreshToken) throws UserNotFoundException;
 
-    UserView loadUserViewByUsername(String username) throws UsernameNotFoundException;
+    UserView loadUserViewByUsername(String username) throws UserNotFoundException;
 
-    UserAuthView loadUserAuthViewByUsername(String username) throws UsernameNotFoundException;
+    UserAuthView loadUserAuthViewByUsername(String username) throws UserNotFoundException;
 
     List<UserAuthView> loadAllUsers();
 
@@ -26,9 +25,9 @@ public interface IUserService {
 
     void clearAll();
 
-    UserDetailView updateCart(String username, List<CartItemDto> cartItems) throws InventoryNotFoundException, UsernameNotFoundException;
+    UserDetailView updateCart(String username, List<CartItemDto> cartItems) throws InventoryNotFoundException, UserNotFoundException;
 
-    List<CartItemDto> getCartOf(String username) throws UsernameNotFoundException;
+    List<CartItemDto> getCartOf(String username) throws UserNotFoundException;
 
     void deleteUserByUsername(String username) throws UserNotFoundException;
 }

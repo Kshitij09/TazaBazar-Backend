@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.kshitijpatil.tazabazar.utils.ExceptionUtils.userNotFoundExceptionSupplier;
 import static com.kshitijpatil.tazabazar.utils.ExceptionUtils.usernameNotFoundExceptionSupplier;
 
 
@@ -68,9 +69,9 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public void storeRefreshTokenFor(String username, String refreshToken) throws UsernameNotFoundException {
+    public void storeRefreshTokenFor(String username, String refreshToken) throws UserNotFoundException {
         var user = userAccounts.findById(username)
-                .orElseThrow(usernameNotFoundExceptionSupplier(username));
+                .orElseThrow(userNotFoundExceptionSupplier(username));
         user.setRefreshToken(refreshToken);
         userAccounts.save(user);
     }
@@ -91,18 +92,18 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public UserView loadUserViewByUsername(String username) throws UsernameNotFoundException {
+    public UserView loadUserViewByUsername(String username) throws UserNotFoundException {
         var userAuth = userAccounts.findById(username)
-                .orElseThrow(usernameNotFoundExceptionSupplier(username));
+                .orElseThrow(userNotFoundExceptionSupplier(username));
         // At this point, we can be sure that user exists (one-to-one mapping)
         var userDetails = users.findById(username).get();
         return UserMapper.toUserView(userDetails, userAuth);
     }
 
     @Override
-    public UserAuthView loadUserAuthViewByUsername(String username) throws UsernameNotFoundException {
+    public UserAuthView loadUserAuthViewByUsername(String username) throws UserNotFoundException {
         return userAccounts.getUserAuthViewByUsername(username)
-                .orElseThrow(usernameNotFoundExceptionSupplier(username));
+                .orElseThrow(userNotFoundExceptionSupplier(username));
     }
 
     @Override
@@ -138,9 +139,9 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public UserDetailView updateCart(String username, List<CartItemDto> cartItems) throws InventoryNotFoundException, UsernameNotFoundException {
+    public UserDetailView updateCart(String username, List<CartItemDto> cartItems) throws InventoryNotFoundException, UserNotFoundException {
         var user = users.findById(username)
-                .orElseThrow(usernameNotFoundExceptionSupplier(username));
+                .orElseThrow(userNotFoundExceptionSupplier(username));
         user.clearCart();
         cartItems.forEach(cartItem -> {
             var inventory = inventories.findById(cartItem.inventoryId)
@@ -151,9 +152,9 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public List<CartItemDto> getCartOf(String username) throws UsernameNotFoundException {
+    public List<CartItemDto> getCartOf(String username) throws UserNotFoundException {
         var user = users.findById(username)
-                .orElseThrow(usernameNotFoundExceptionSupplier(username));
+                .orElseThrow(userNotFoundExceptionSupplier(username));
         return user.cart.stream()
                 .map(UserMapper::toCartItemDto)
                 .collect(Collectors.toList());
