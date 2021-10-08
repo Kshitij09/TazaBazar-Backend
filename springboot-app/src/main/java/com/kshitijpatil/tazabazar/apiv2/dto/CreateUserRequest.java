@@ -26,7 +26,7 @@ public class CreateUserRequest {
     @NotBlank
     @NonNull
     public String phone;
-    public Set<String> authorities;
+    public Set<String> authorities = new HashSet<>();
 
 
     public CreateUserRequest(@NonNull String username, @NonNull String password, @NonNull String phone) {

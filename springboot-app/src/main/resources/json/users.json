@@ -3,9 +3,6 @@
     "username": "john.doe@test.com",
     "password": "1234",
     "phone": "1234567890",
-    "authorities": [
-      "ROLE_USER"
-    ],
     "full_name": "John Doe"
   },
   {

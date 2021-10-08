@@ -42,6 +42,9 @@ public class UserService implements IUserService, UserDetailsService {
         try {
             var userDetail = new User(request.username, request.fullName, request.phone);
             var userAuth = new UserAuth(AggregateReference.to(userDetail.username), request.password);
+            if (request.authorities.isEmpty()) {
+                request.authorities.add(Role.ROLE_USER);
+            }
             request.authorities.forEach(roleName -> {
                 var role = roles.findById(roleName)
                         .orElseThrow(() -> new RoleNotFoundException(roleName));
