@@ -43,6 +43,12 @@ public class UserController {
         return ResponseEntity.ok(userView);
     }
 
+    @DeleteMapping("{username}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteUserByUsername(@PathVariable("username") String username) {
+        userService.deleteUserByUsername(username);
+    }
+
     @PutMapping("{username}/cart")
     public ResponseEntity<UserDetailView> updateUserCart(@PathVariable("username") String username, @RequestBody List<CartItemDto> cartItems, Principal principal) {
         if (!principal.getName().equals(username))

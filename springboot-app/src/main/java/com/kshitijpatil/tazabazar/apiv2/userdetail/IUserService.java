@@ -29,4 +29,6 @@ public interface IUserService {
     UserDetailView updateCart(String username, List<CartItemDto> cartItems) throws InventoryNotFoundException, UsernameNotFoundException;
 
     List<CartItemDto> getCartOf(String username) throws UsernameNotFoundException;
+
+    void deleteUserByUsername(String username) throws UserNotFoundException;
 }

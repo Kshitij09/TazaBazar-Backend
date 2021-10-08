@@ -158,4 +158,11 @@ public class UserService implements IUserService, UserDetailsService {
                 .map(UserMapper::toCartItemDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteUserByUsername(String username) {
+        var rowsAffected = users.deleteByUsername(username);
+        if (rowsAffected == 0)
+            throw new UserNotFoundException(username);
+    }
 }
