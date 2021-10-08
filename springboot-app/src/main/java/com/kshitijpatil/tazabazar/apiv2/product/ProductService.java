@@ -76,20 +76,24 @@ public class ProductService implements IProductService {
 
     @Override
     public List<ProductOutDto> searchProductByName(String query) {
-        return toProductOutDtoList(products.searchProductByName(query));
+        return toProductOutDtoList(products.searchProductByName(formatSearchQuery(query)));
+    }
+
+    private String formatSearchQuery(String rawQuery) {
+        return String.format("%s:*", rawQuery);
     }
 
     @Override
     public List<ProductOutDto> getProductsByCategoryAndName(@Nullable String category, @Nullable String nameQuery) {
         Iterable<Product> queryResults;
         if (category != null && nameQuery != null)
-            queryResults = products.searchProductByCategoryAndName(category, nameQuery);
+            queryResults = products.searchProductByCategoryAndName(category, formatSearchQuery(nameQuery));
         else if (category == null && nameQuery == null)
             queryResults = products.findAll();
         else if (nameQuery == null)
             queryResults = products.findByCategory(category);
         else
-            queryResults = products.searchProductByName(nameQuery);
+            queryResults = products.searchProductByName(formatSearchQuery(nameQuery));
         return toProductOutDtoList(queryResults);
     }
 }

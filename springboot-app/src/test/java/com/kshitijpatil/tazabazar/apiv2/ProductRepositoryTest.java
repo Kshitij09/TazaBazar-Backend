@@ -153,10 +153,17 @@ public class ProductRepositoryTest {
         var kadiPatta = new Product(String.format("%s-001", leafyVegetables.skuPrefix),
                 "Kadi Patta / Curry Leaves",
                 AggregateReference.to(leafyVegetables.label));
+        var tomato = new Product(String.format("%s-002", vegetables.skuPrefix),
+                "Tomato Red",
+                AggregateReference.to(vegetables.label));
         template.insert(kadiPatta);
+        template.insert(tomato);
         template.insert(carrot);
         assertThat(products.searchProductByName("sagkkjal")).isEmpty();
-        assertThat(products.searchProductByName("curry leave")).containsOnly(kadiPatta);
+        assertThat(products.searchProductByName("cur:*")).containsOnly(kadiPatta);
+        assertThat(products.searchProductByName("tom:*")).containsOnly(tomato);
+        assertThat(products.searchProductByName("car:*")).containsOnly(carrot);
+        assertThat(products.searchProductByName("carrots:*")).containsOnly(carrot);
     }
 
     @Test
