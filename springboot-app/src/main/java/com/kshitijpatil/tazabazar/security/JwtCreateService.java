@@ -37,7 +37,7 @@ public class JwtCreateService {
                 .setExpiration(dateUtil.toDate(expiryDate))
                 .setIssuer(jwtIssuer)
                 .setId(UUID.randomUUID().toString())
-                .signWith(SignatureAlgorithm.RS256, jwtPrivateKeyProvider.getPrivateKey())
+                .signWith(SignatureAlgorithm.RS256, jwtPrivateKeyProvider.get())
                 .claim(CLAIM_USERNAME, username)
                 .claim(CLAIM_ROLES, roles.toArray())
                 .compact();
