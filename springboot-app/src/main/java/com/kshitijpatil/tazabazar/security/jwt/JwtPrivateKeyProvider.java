@@ -1,48 +1,38 @@
 package com.kshitijpatil.tazabazar.security.jwt;
 
-import com.kshitijpatil.tazabazar.utils.Base64Util;
-import com.kshitijpatil.tazabazar.utils.ReadKeyMixin;
+import com.kshitijpatil.tazabazar.configuration.JwtConfig;
 import com.kshitijpatil.tazabazar.utils.ResourceUtil;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 
 @Component
 @RequiredArgsConstructor
-public class JwtPrivateKeyProvider implements ReadKeyMixin {
-    @Getter
+public class JwtPrivateKeyProvider {
     private final ResourceUtil resourceUtil;
-    private final Base64Util base64Util;
-
-    @Getter
+    private final JwtConfig jwtConfig;
     private PrivateKey privateKey;
 
     @PostConstruct
     public void init() {
-        privateKey = readKey(
-                "classpath:keys/tzb_key.pkcs8.private",
-                "PRIVATE",
-                this::privateKeySpec,
-                this::privateKeyGenerator
-        );
-    }
-
-    private EncodedKeySpec privateKeySpec(String data) {
-        return new PKCS8EncodedKeySpec(base64Util.decode(data));
-    }
-
-    private PrivateKey privateKeyGenerator(KeyFactory kf, EncodedKeySpec spec) {
         try {
-            return kf.generatePrivate(spec);
-        } catch (InvalidKeySpecException e) {
-            throw new JwtInitializationException(e);
+            var keyBytes = resourceUtil.readAllBytes(jwtConfig.getPrivateKeyFilepath());
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            privateKey = keyFactory.generatePrivate(spec);
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
+            throw new JwtInitializationException(ex);
         }
+    }
+
+    public PrivateKey get() {
+        return privateKey;
     }
 }
