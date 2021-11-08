@@ -16,7 +16,7 @@ public class JwtValidateService {
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .setSigningKey(jwtPublicKeyProvider.getPublicKey())
+                    .setSigningKey(jwtPublicKeyProvider.get())
                     .parseClaimsJws(token);
             return true;
         } catch (SignatureException ex) {
@@ -35,7 +35,7 @@ public class JwtValidateService {
 
     public Claims getClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtPublicKeyProvider.getPublicKey())
+                .setSigningKey(jwtPublicKeyProvider.get())
                 .parseClaimsJws(token)
                 .getBody();
     }

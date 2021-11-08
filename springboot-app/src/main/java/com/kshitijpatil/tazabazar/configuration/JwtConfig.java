@@ -9,4 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "jwt")
 public class JwtConfig {
     private Long expirationInMinutes;
+    private String privateKeyFilepath;
+    private String publicKeyFilepath;
 }
