@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -23,5 +24,14 @@ public class ResourceUtil {
         try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
             return FileCopyUtils.copyToString(reader);
         }
+    }
+
+    public InputStream getInputStream(String resourcePath) throws IOException {
+        Resource resource = resourceLoader.getResource(resourcePath);
+        return resource.getInputStream();
+    }
+
+    public byte[] readAllBytes(String resourcePath) throws IOException {
+        return getInputStream(resourcePath).readAllBytes();
     }
 }
